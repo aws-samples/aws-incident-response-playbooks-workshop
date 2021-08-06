@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Condition": {
+              "StringNotLike": {
+                  "aws:PrincipalArn": [
+                      "arn:aws:iam::777777777777:role/SecurityBreakGlassRole"
+                  ]
+              }
+          },
+          "Action": "*",
+          "Resource": [
+              "arn:aws:s3:::simulation-aacd573a-7d98-4972-9c66-0d653b174df1",
+              "arn:aws:s3:::simulation-aacd573a-7d98-4972-9c66-0d653b174df1/*"
+          ],
+          "Effect": "Deny",
+          "Principal": "*",
+          "Sid": "BucketPolicyForContainment"
+      }
+  ]
+}
