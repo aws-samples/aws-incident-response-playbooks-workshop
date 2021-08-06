@@ -42,13 +42,11 @@ An AWS CDK python application and AWS CloudFormation templates are provided for 
 * Security break glass IAM Role for containment, eradication, and recovery
 * Security deploy IAM Role for CloudFormation deployment of SimulationStack
 
-![Image](readme-images/cloudformation-designer-CoreStack.png)
-
 ### SimulationStack components:
 * IAM User Access Key for EC2 crypto mining simulation
 * IAM User Access Key for IAM credential exposure simulation
 
-![Image](readme-images/cloudformation-designer-SimulationStack.png)
+![Image](readme-images/diagram.png)
 
 * * *
 
