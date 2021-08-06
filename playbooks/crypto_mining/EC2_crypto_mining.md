@@ -829,6 +829,8 @@ Parse through the distilled information looking for patterns, extrapolate into b
 
 * Disable IAM Access Key IDs ```AKIAIOSFODNN7EXAMPLE``` and verify:
 
+Please note IAM is [eventually consistent](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency), if during verification the ```"Status"``` shows ```"Active"```, just ```list-access-keys again``` and the ```"Status"``` will eventually show up as ```"Inactive"```.
+
 ```
 aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive --user-name pipeline
 (no output)
@@ -839,7 +841,7 @@ aws iam list-access-keys --user-name pipeline
         {
             "UserName": "integration",
             "AccessKeyId": "AKIAIOSFODNN7EXAMPLE",
-            "Status": "Active",
+            "Status": "Inactive",
             "CreateDate": "2021-07-24T02:31:19+00:00"
         }
     ]
@@ -987,6 +989,9 @@ stopped
 ***>>>>>THESE ACTIONS ARE FINAL AND UNRECOVERABLE<<<<<***
 
 * Delete IAM Users
+
+Please note IAM is [eventually consistent](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency), if during verification the users still exist, they will eventually be deleted.
+
 ```
 aws iam detach-user-policy --user-name pipeline --policy-arn arn:aws:iam::777777777777:policy/SimulationStack-SystemIntegrationPolicy
 (no output)
