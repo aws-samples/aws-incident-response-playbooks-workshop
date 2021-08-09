@@ -21,6 +21,34 @@ Resources:
           - Action: s3:GetBucketAcl
             Effect: Allow
             Principal:
+              Service:
+                - cloudtrail.amazonaws.com
+                - delivery.logs.amazonaws.com
+            Resource:
+              Fn::GetAtt:
+                - BucketLogs9C0DCA97
+                - Arn
+            Sid: AllowAWSServiceGetBucketAcl
+          - Action: s3:PutObject
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: bucket-owner-full-control
+            Effect: Allow
+            Principal:
+              Service:
+                - cloudtrail.amazonaws.com
+                - delivery.logs.amazonaws.com
+            Resource:
+              Fn::Join:
+                - ""
+                - - Fn::GetAtt:
+                      - BucketLogs9C0DCA97
+                      - Arn
+                  - /*
+            Sid: AllowAWSServicePutObject
+          - Action: s3:GetBucketAcl
+            Effect: Allow
+            Principal:
               Service: cloudtrail.amazonaws.com
             Resource:
               Fn::GetAtt:

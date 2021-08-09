@@ -5,12 +5,6 @@
 # Building Incident Response Playbooks for AWS
 
 ## Workshop core stack
-
-### warning:
-* Racing condition at times prevents the provisioning of services dependent on the logging bucket such as CloudTrail,
-VPC Flow, and DNS logs. This is due to the [eventual consistency of IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency)
-deploying/enforcing the S3 Bucket policy. Simply try again the deployment of the CoreStack.
-
 """
 from aws_cdk import (
     core,
@@ -35,6 +29,31 @@ class CoreStack(core.Stack):
             "BucketLogs",
             bucket_name=core.PhysicalName.GENERATE_IF_NEEDED,
             block_public_access=aws_s3.BlockPublicAccess.BLOCK_ALL,
+        )
+        logging_bucket.add_to_resource_policy(
+            aws_iam.PolicyStatement(
+                sid="AllowAWSServiceGetBucketAcl",
+                effect=aws_iam.Effect.ALLOW,
+                principals=[aws_iam.ServicePrincipal(service="cloudtrail.amazonaws.com"),
+                            aws_iam.ServicePrincipal(service="delivery.logs.amazonaws.com")],
+                actions=["s3:GetBucketAcl"],
+                resources=[logging_bucket.bucket_arn],
+            )
+        )
+        logging_bucket.add_to_resource_policy(
+            aws_iam.PolicyStatement(
+                sid="AllowAWSServicePutObject",
+                effect=aws_iam.Effect.ALLOW,
+                principals=[aws_iam.ServicePrincipal(service="cloudtrail.amazonaws.com"),
+                            aws_iam.ServicePrincipal(service="delivery.logs.amazonaws.com")],
+                actions=["s3:PutObject"],
+                resources=[logging_bucket.bucket_arn + "/*"],
+                conditions={
+                    "StringEquals": {
+                        "s3:x-amz-acl": "bucket-owner-full-control"
+                    }
+                },
+            )
         )
         athena_bucket = aws_s3.Bucket(
             self,
