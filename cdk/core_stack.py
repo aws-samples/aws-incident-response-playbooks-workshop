@@ -199,6 +199,10 @@ class CoreStack(core.Stack):
             type="String",
             default="2021/06/14",
         )
+        RegionPartitionValues = "".join(["us-east-2,us-east-1,us-west-1,us-west-2,af-south-1,ap-east-1,",
+                                        "ap-south-1,ap-northeast-3,ap-northeast-2,ap-southeast-1,ap-southeast-2,",
+                                        "ap-northeast-1,ca-central-1,cn-north-1,cn-northwest-1,eu-central-1,",
+                                        "eu-west-1,eu-west-2,eu-south-1,eu-west-3,eu-north-1,me-south-1,sa-east-1"])
         CloudTrailProjectionDateRange = CfnParamCloudTrailProjectionEventStartDate.value_as_string + ", NOW"
         CloudTrailSource = "".join(["s3://",
                                     logging_bucket.bucket_name,
@@ -214,7 +218,7 @@ class CoreStack(core.Stack):
             "projection.date_partition.interval": "1",
             "projection.date_partition.interval.unit": "DAYS",
             "projection.region_partition.type": "enum",
-            "projection.region_partition.values": core.Aws.REGION,
+            "projection.region_partition.values": RegionPartitionValues,
             "projection.account_partition.type": "enum",
             "projection.account_partition.values": core.Aws.ACCOUNT_ID,
             "storage.location.template": CloudTrailSource,
@@ -306,7 +310,7 @@ class CoreStack(core.Stack):
             "projection.date_partition.interval": "1",
             "projection.date_partition.interval.unit": "DAYS",
             "projection.region_partition.type": "enum",
-            "projection.region_partition.values": core.Aws.REGION,
+            "projection.region_partition.values": RegionPartitionValues,
             "projection.account_partition.type": "enum",
             "projection.account_partition.values": core.Aws.ACCOUNT_ID,
             "storage.location.template": VPCFlowSource,
