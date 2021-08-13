@@ -11,3 +11,4 @@ __pycache__
 .cdk.staging
 cdk/cdk.out/*.out
 cdk/cdk.out/*.json
+.vscode/*
