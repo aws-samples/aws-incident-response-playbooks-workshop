@@ -141,7 +141,7 @@ Assume the SecurityAnalystRole on the AWS account hosting the Athena workgroup I
 
 ```
 -- check all EC2 actions performed involving the EC2 instances
-SELECT awsregion, eventsource, eventname, readonly, errorcode, errormessage, count(eventid) as COUNT 
+SELECT awsregion, useridentity.arn, eventsource, eventname, readonly, errorcode, errormessage, count(eventid) as COUNT 
 FROM "irworkshopgluedatabase"."irworkshopgluetablecloudtrail"
 WHERE eventsource = 'ec2.amazonaws.com' AND
       (date_partition >= '2021/07/22' AND
@@ -157,7 +157,7 @@ WHERE eventsource = 'ec2.amazonaws.com' AND
        responseelements  LIKE '%i-021345abcdef678g%' OR
        responseelements  LIKE '%i-021345abcdef678h%'
       )
-GROUP BY awsregion, eventsource, eventname, readonly, errorcode, errormessage
+GROUP BY awsregion, useridentity.arn, eventsource, eventname, readonly, errorcode, errormessage
 ORDER BY COUNT DESC;
 ```
 
@@ -283,29 +283,6 @@ i-021345abcdef678h |
 i-021345abcdef678i |
 i-021345abcdef678j |
 
-```
--- retrieve past 7 days of infrastructure and application network activity         
-SELECT "irworkshopgluedatabase"."irworkshopgluetablevpcflow".sourceaddress, 
-       "irworkshopgluedatabase"."irworkshopgluetablevpcflow".destinationaddress,
-       count(*) as count
-FROM "irworkshopgluedatabase"."irworkshopgluetablevpcflow" 
-INNER JOIN "irworkshopgluedatabase"."irworkshopgluetablecloudtrail"
-ON ("irworkshopgluedatabase"."irworkshopgluetablecloudtrail".sourceipaddress = 
-   "irworkshopgluedatabase"."irworkshopgluetablevpcflow".sourceaddress)
-   OR
-   ("irworkshopgluedatabase"."irworkshopgluetablecloudtrail".sourceipaddress = 
-   "irworkshopgluedatabase"."irworkshopgluetablevpcflow".destinationaddress)
-WHERE "irworkshopgluedatabase"."irworkshopgluetablecloudtrail".useridentity.arn = 'arn:aws:iam::999999999999:user/pipeline'
-       AND "irworkshopgluedatabase"."irworkshopgluetablecloudtrail".date_partition >= '2021/07/12'
-       AND "irworkshopgluedatabase"."irworkshopgluetablecloudtrail".date_partition <= '2021/07/29'
-GROUP BY "irworkshopgluedatabase"."irworkshopgluetablevpcflow".sourceaddress, 
-         "irworkshopgluedatabase"."irworkshopgluetablevpcflow".destinationaddress
-ORDER BY count DESC
-```
-
-```
-Zero records returned.
-```
 
 ```
 -- retrieve past 7 days of infrastructure and application network activity         
