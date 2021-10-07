@@ -4,7 +4,7 @@
 
 # Building Incident Response Playbooks for AWS
 
-## Workshop core stack
+## Workshop stack
 """
 from aws_cdk import (
     core,
@@ -19,7 +19,7 @@ from aws_cdk import (
 )
 
 
-class CoreStack(core.Stack):
+class WorkshopStack(core.Stack):
     def __init__(
             self, scope: core.Construct, construct_id: str, **kwargs
     ) -> None:
@@ -198,6 +198,7 @@ class CoreStack(core.Stack):
             "ParamCloudTrailProjectionEventStartDate",
             type="String",
             default="2021/06/14",
+            description="Athena CloudTrail Table Projection Partition Start Date",
         )
         RegionPartitionValues = "".join(["us-east-2,us-east-1,us-west-1,us-west-2,af-south-1,ap-east-1,",
                                         "ap-south-1,ap-northeast-3,ap-northeast-2,ap-southeast-1,ap-southeast-2,",
@@ -294,6 +295,7 @@ class CoreStack(core.Stack):
             "ParamVPCFlowProjectionEventStartDate",
             type="String",
             default="2021/06/14",
+            description="Athena VPC Flow Table Projection Partition Start Date",
         )
         VPCFlowProjectionDateRange = CfnParamVPCFlowProjectionEventStartDate.value_as_string + ", NOW"
         VPCFlowSource = "".join(["s3://",
@@ -383,6 +385,7 @@ class CoreStack(core.Stack):
             "ParamDNSProjectionEventStartDate",
             type="String",
             default="2021/06/14",
+            description="Athena DNS Table Projection Partition Start Date",
         )
         DNSProjectionDateRange = CfnParamDNSProjectionEventStartDate.value_as_string + ", NOW"
         DNSSource = "".join(["s3://",
@@ -447,6 +450,14 @@ class CoreStack(core.Stack):
                     ),
                 )
             ),
+        )
+
+        CfnParamBaseIAMRole = core.CfnParameter(
+            self,
+            "ParamBaseIAMRole",
+            type="String",
+            default="TeamRole",
+            description="Existing IAM Role to be used to assume workshop IAM Roles",
         )
 
         security_analyst_role_policy = aws_iam.ManagedPolicy(
@@ -592,7 +603,7 @@ class CoreStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/TeamRole"
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
                     ]
                 }
                 }
@@ -745,7 +756,7 @@ class CoreStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/TeamRole"
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
                     ]
                 }
                 }
@@ -769,7 +780,7 @@ class CoreStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/TeamRole"
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
                     ]
                 }
                 }
@@ -832,7 +843,7 @@ class CoreStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/TeamRole"
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
                     ]
                 }
                 }
@@ -890,3 +901,87 @@ class CoreStack(core.Stack):
         )
         vpcflow_queries.add_depends_on(athena_workgroup)
         vpcflow_queries.add_depends_on(glue_database)
+
+        exposed_credential_policy = aws_iam.ManagedPolicy(
+            self,
+            "SystemIntegrationPolicy",
+            statements=[
+                aws_iam.PolicyStatement(
+                    sid="AllowIAM",
+                    effect=aws_iam.Effect.ALLOW,
+                    actions=["iam:*"],
+                    resources=["*"]
+                )
+            ]
+        )
+
+        exposed_credential = aws_iam.User(
+            self,
+            "CredentialExposure",
+            user_name="integration",
+            managed_policies=[exposed_credential_policy],
+        )
+
+        exposed_credential_access_key = aws_iam.CfnAccessKey(
+            self,
+            "CredentialExposureAccessKey",
+            user_name=exposed_credential.user_name,
+            serial=None,
+            status="Active",
+        )
+
+        core.CfnOutput(
+            self,
+            "CredentialExposureAccessKeySecret",
+            description="IAM user access key secret for exposed credential scenario",
+            value=exposed_credential_access_key.attr_secret_access_key,
+        )
+
+        core.CfnOutput(
+            self,
+            "CredentialExposureAccessKeyId",
+            description="IAM user access key id for exposed credential scenario",
+            value=exposed_credential_access_key.ref,
+        )
+
+        crypto_mining_credential_policy = aws_iam.ManagedPolicy(
+            self,
+            "CryptoMiningPolicy",
+            statements=[
+                aws_iam.PolicyStatement(
+                    sid="AllowEC2",
+                    effect=aws_iam.Effect.ALLOW,
+                    actions=["ec2:*"],
+                    resources=["*"]
+                )
+            ]
+        )
+
+        crypto_mining_credential = aws_iam.User(
+            self,
+            "CryptoMiningCredential",
+            user_name="pipeline",
+            managed_policies=[crypto_mining_credential_policy],
+        )
+
+        crypto_mining_credential_access_key = aws_iam.CfnAccessKey(
+            self,
+            "CryptoMiningAccessKey",
+            user_name=crypto_mining_credential.user_name,
+            serial=None,
+            status="Active",
+        )
+
+        core.CfnOutput(
+            self,
+            "CryptoMiningAccessKeySecret",
+            description="IAM user access key secret for crypto mining scenario",
+            value=crypto_mining_credential_access_key.attr_secret_access_key,
+        )
+
+        core.CfnOutput(
+            self,
+            "CryptoMiningAccessKeyId",
+            description="IAM user access key id for crypto mining scenario",
+            value=crypto_mining_credential_access_key.ref,
+        )

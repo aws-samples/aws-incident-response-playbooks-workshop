@@ -9,14 +9,14 @@ with open("README.md") as fp:
 
 
 setuptools.setup(
-    name="cdk",
-    version="0.0.1",
+    name="BuildingAWSIRPlaybooksWorkshop",
+    version="0.0.2",
 
-    description="An empty CDK Python app",
+    description="Building playbooks for incident response in AWS workshop",
     long_description=long_description,
     long_description_content_type="text/markdown",
 
-    author="author",
+    author="AWS",
 
     package_dir={"": "cdk"},
     packages=setuptools.find_packages(where="cdk"),

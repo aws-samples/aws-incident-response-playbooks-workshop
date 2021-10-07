@@ -10,7 +10,7 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: CoreStack/BucketLogs/Resource
+      aws:cdk:path: WorkshopStack/BucketLogs/Resource
   BucketLogsPolicy239CFD00:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -72,7 +72,7 @@ Resources:
                   - /*
         Version: "2012-10-17"
     Metadata:
-      aws:cdk:path: CoreStack/BucketLogs/Policy/Resource
+      aws:cdk:path: WorkshopStack/BucketLogs/Policy/Resource
   BucketAthena8BD64EF0:
     Type: AWS::S3::Bucket
     Properties:
@@ -84,7 +84,7 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: CoreStack/BucketAthena/Resource
+      aws:cdk:path: WorkshopStack/BucketAthena/Resource
   Trail022F0CF2:
     Type: AWS::CloudTrail::Trail
     Properties:
@@ -107,13 +107,13 @@ Resources:
     DependsOn:
       - BucketLogsPolicy239CFD00
     Metadata:
-      aws:cdk:path: CoreStack/Trail/Resource
+      aws:cdk:path: WorkshopStack/Trail/Resource
   IRWorkshopGuardDutyDetector:
     Type: AWS::GuardDuty::Detector
     Properties:
       Enable: true
     Metadata:
-      aws:cdk:path: CoreStack/IRWorkshopGuardDutyDetector
+      aws:cdk:path: WorkshopStack/IRWorkshopGuardDutyDetector
   VPCB9E5F0B4:
     Type: AWS::EC2::VPC
     Properties:
@@ -123,9 +123,9 @@ Resources:
       InstanceTenancy: default
       Tags:
         - Key: Name
-          Value: CoreStack/VPC
+          Value: WorkshopStack/VPC
     Metadata:
-      aws:cdk:path: CoreStack/VPC/Resource
+      aws:cdk:path: WorkshopStack/VPC/Resource
   VPCPublicSubnet1SubnetB4246D30:
     Type: AWS::EC2::Subnet
     Properties:
@@ -143,9 +143,9 @@ Resources:
         - Key: aws-cdk:subnet-type
           Value: Public
         - Key: Name
-          Value: CoreStack/VPC/PublicSubnet1
+          Value: WorkshopStack/VPC/PublicSubnet1
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet1/Subnet
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/Subnet
   VPCPublicSubnet1RouteTableFEE4B781:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -153,9 +153,9 @@ Resources:
         Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
-          Value: CoreStack/VPC/PublicSubnet1
+          Value: WorkshopStack/VPC/PublicSubnet1
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet1/RouteTable
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/RouteTable
   VPCPublicSubnet1RouteTableAssociation0B0896DC:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -164,7 +164,7 @@ Resources:
       SubnetId:
         Ref: VPCPublicSubnet1SubnetB4246D30
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet1/RouteTableAssociation
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/RouteTableAssociation
   VPCPublicSubnet1DefaultRoute91CEF279:
     Type: AWS::EC2::Route
     Properties:
@@ -176,16 +176,16 @@ Resources:
     DependsOn:
       - VPCVPCGW99B986DC
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet1/DefaultRoute
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/DefaultRoute
   VPCPublicSubnet1EIP6AD938E8:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
       Tags:
         - Key: Name
-          Value: CoreStack/VPC/PublicSubnet1
+          Value: WorkshopStack/VPC/PublicSubnet1
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet1/EIP
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/EIP
   VPCPublicSubnet1NATGatewayE0556630:
     Type: AWS::EC2::NatGateway
     Properties:
@@ -197,9 +197,9 @@ Resources:
           - AllocationId
       Tags:
         - Key: Name
-          Value: CoreStack/VPC/PublicSubnet1
+          Value: WorkshopStack/VPC/PublicSubnet1
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet1/NATGateway
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/NATGateway
   VPCPublicSubnet2Subnet74179F39:
     Type: AWS::EC2::Subnet
     Properties:
@@ -217,9 +217,9 @@ Resources:
         - Key: aws-cdk:subnet-type
           Value: Public
         - Key: Name
-          Value: CoreStack/VPC/PublicSubnet2
+          Value: WorkshopStack/VPC/PublicSubnet2
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet2/Subnet
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet2/Subnet
   VPCPublicSubnet2RouteTable6F1A15F1:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -227,9 +227,9 @@ Resources:
         Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
-          Value: CoreStack/VPC/PublicSubnet2
+          Value: WorkshopStack/VPC/PublicSubnet2
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet2/RouteTable
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet2/RouteTable
   VPCPublicSubnet2RouteTableAssociation5A808732:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -238,7 +238,7 @@ Resources:
       SubnetId:
         Ref: VPCPublicSubnet2Subnet74179F39
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet2/RouteTableAssociation
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet2/RouteTableAssociation
   VPCPublicSubnet2DefaultRouteB7481BBA:
     Type: AWS::EC2::Route
     Properties:
@@ -250,7 +250,7 @@ Resources:
     DependsOn:
       - VPCVPCGW99B986DC
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PublicSubnet2/DefaultRoute
+      aws:cdk:path: WorkshopStack/VPC/PublicSubnet2/DefaultRoute
   VPCPrivateSubnet1Subnet8BCA10E0:
     Type: AWS::EC2::Subnet
     Properties:
@@ -268,9 +268,9 @@ Resources:
         - Key: aws-cdk:subnet-type
           Value: Private
         - Key: Name
-          Value: CoreStack/VPC/PrivateSubnet1
+          Value: WorkshopStack/VPC/PrivateSubnet1
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet1/Subnet
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/Subnet
   VPCPrivateSubnet1RouteTableBE8A6027:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -278,9 +278,9 @@ Resources:
         Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
-          Value: CoreStack/VPC/PrivateSubnet1
+          Value: WorkshopStack/VPC/PrivateSubnet1
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet1/RouteTable
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/RouteTable
   VPCPrivateSubnet1RouteTableAssociation347902D1:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -289,7 +289,7 @@ Resources:
       SubnetId:
         Ref: VPCPrivateSubnet1Subnet8BCA10E0
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet1/RouteTableAssociation
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/RouteTableAssociation
   VPCPrivateSubnet1DefaultRouteAE1D6490:
     Type: AWS::EC2::Route
     Properties:
@@ -299,7 +299,7 @@ Resources:
       NatGatewayId:
         Ref: VPCPublicSubnet1NATGatewayE0556630
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet1/DefaultRoute
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/DefaultRoute
   VPCPrivateSubnet2SubnetCFCDAA7A:
     Type: AWS::EC2::Subnet
     Properties:
@@ -317,9 +317,9 @@ Resources:
         - Key: aws-cdk:subnet-type
           Value: Private
         - Key: Name
-          Value: CoreStack/VPC/PrivateSubnet2
+          Value: WorkshopStack/VPC/PrivateSubnet2
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet2/Subnet
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/Subnet
   VPCPrivateSubnet2RouteTable0A19E10E:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -327,9 +327,9 @@ Resources:
         Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
-          Value: CoreStack/VPC/PrivateSubnet2
+          Value: WorkshopStack/VPC/PrivateSubnet2
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet2/RouteTable
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/RouteTable
   VPCPrivateSubnet2RouteTableAssociation0C73D413:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -338,7 +338,7 @@ Resources:
       SubnetId:
         Ref: VPCPrivateSubnet2SubnetCFCDAA7A
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet2/RouteTableAssociation
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/RouteTableAssociation
   VPCPrivateSubnet2DefaultRouteF4F5CFD2:
     Type: AWS::EC2::Route
     Properties:
@@ -348,15 +348,15 @@ Resources:
       NatGatewayId:
         Ref: VPCPublicSubnet1NATGatewayE0556630
     Metadata:
-      aws:cdk:path: CoreStack/VPC/PrivateSubnet2/DefaultRoute
+      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/DefaultRoute
   VPCIGWB7E252D3:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: CoreStack/VPC
+          Value: WorkshopStack/VPC
     Metadata:
-      aws:cdk:path: CoreStack/VPC/IGW
+      aws:cdk:path: WorkshopStack/VPC/IGW
   VPCVPCGW99B986DC:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -365,7 +365,7 @@ Resources:
       InternetGatewayId:
         Ref: VPCIGWB7E252D3
     Metadata:
-      aws:cdk:path: CoreStack/VPC/VPCGW
+      aws:cdk:path: WorkshopStack/VPC/VPCGW
   SecurityGroupDD263621:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -383,7 +383,7 @@ Resources:
       VpcId:
         Ref: VPCB9E5F0B4
     Metadata:
-      aws:cdk:path: CoreStack/SecurityGroup/Resource
+      aws:cdk:path: WorkshopStack/SecurityGroup/Resource
   JustAnInstanceInstanceRole22F262AD:
     Type: AWS::IAM::Role
     Properties:
@@ -402,14 +402,14 @@ Resources:
         - Key: Name
           Value: just_an_instance
     Metadata:
-      aws:cdk:path: CoreStack/JustAnInstance/InstanceRole/Resource
+      aws:cdk:path: WorkshopStack/JustAnInstance/InstanceRole/Resource
   JustAnInstanceInstanceProfileDAD55CBE:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
         - Ref: JustAnInstanceInstanceRole22F262AD
     Metadata:
-      aws:cdk:path: CoreStack/JustAnInstance/InstanceProfile
+      aws:cdk:path: WorkshopStack/JustAnInstance/InstanceProfile
   JustAnInstanceA974E24E:
     Type: AWS::EC2::Instance
     Properties:
@@ -436,7 +436,7 @@ Resources:
     DependsOn:
       - JustAnInstanceInstanceRole22F262AD
     Metadata:
-      aws:cdk:path: CoreStack/JustAnInstance/Resource
+      aws:cdk:path: WorkshopStack/JustAnInstance/Resource
   VPCFlowLog:
     Type: AWS::EC2::FlowLog
     Properties:
@@ -452,7 +452,7 @@ Resources:
       LogFormat: ${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${vpc-id} ${subnet-id} ${instance-id} ${tcp-flags} ${type} ${pkt-srcaddr} ${pkt-dstaddr} ${region} ${az-id} ${sublocation-type} ${sublocation-id} ${pkt-src-aws-service} ${pkt-dst-aws-service} ${flow-direction} ${traffic-path}
       MaxAggregationInterval: 60
     Metadata:
-      aws:cdk:path: CoreStack/VPCFlowLog
+      aws:cdk:path: WorkshopStack/VPCFlowLog
   DNSLogs:
     Type: AWS::Route53Resolver::ResolverQueryLoggingConfig
     Properties:
@@ -462,7 +462,7 @@ Resources:
           - Arn
       Name: DNS Logs for IR Workshop
     Metadata:
-      aws:cdk:path: CoreStack/DNSLogs
+      aws:cdk:path: WorkshopStack/DNSLogs
   DNSLogsAssociation:
     Type: AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation
     Properties:
@@ -475,7 +475,7 @@ Resources:
     DependsOn:
       - DNSLogs
     Metadata:
-      aws:cdk:path: CoreStack/DNSLogsAssociation
+      aws:cdk:path: WorkshopStack/DNSLogsAssociation
   AthenaWorkGroup:
     Type: AWS::Athena::WorkGroup
     Properties:
@@ -498,7 +498,7 @@ Resources:
                 - Ref: BucketAthena8BD64EF0
                 - /
     Metadata:
-      aws:cdk:path: CoreStack/AthenaWorkGroup
+      aws:cdk:path: WorkshopStack/AthenaWorkGroup
   IRWorkshopGlueDatabase:
     Type: AWS::Glue::Database
     Properties:
@@ -507,7 +507,7 @@ Resources:
       DatabaseInput:
         Name: irworkshopgluedatabase
     Metadata:
-      aws:cdk:path: CoreStack/IRWorkshopGlueDatabase
+      aws:cdk:path: WorkshopStack/IRWorkshopGlueDatabase
   IRWorkshopGlueTableCloudTrail:
     Type: AWS::Glue::Table
     Properties:
@@ -607,7 +607,7 @@ Resources:
             SerializationLibrary: com.amazon.emr.hive.serde.CloudTrailSerde
         TableType: EXTERNAL_TABLE
     Metadata:
-      aws:cdk:path: CoreStack/IRWorkshopGlueTableCloudTrail
+      aws:cdk:path: WorkshopStack/IRWorkshopGlueTableCloudTrail
   IRWorkshopGlueTableVPCFlow:
     Type: AWS::Glue::Table
     Properties:
@@ -722,7 +722,7 @@ Resources:
             SerializationLibrary: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
         TableType: EXTERNAL_TABLE
     Metadata:
-      aws:cdk:path: CoreStack/IRWorkshopGlueTableVPCFlow
+      aws:cdk:path: WorkshopStack/IRWorkshopGlueTableVPCFlow
   IRWorkshopGlueTableDNS:
     Type: AWS::Glue::Table
     Properties:
@@ -807,7 +807,7 @@ Resources:
             SerializationLibrary: org.openx.data.jsonserde.JsonSerDe
         TableType: EXTERNAL_TABLE
     Metadata:
-      aws:cdk:path: CoreStack/IRWorkshopGlueTableDNS
+      aws:cdk:path: WorkshopStack/IRWorkshopGlueTableDNS
   SecurityAnalystRolePolicy0E5470A7:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -1001,7 +1001,7 @@ Resources:
       Description: ""
       Path: /
     Metadata:
-      aws:cdk:path: CoreStack/SecurityAnalystRolePolicy/Resource
+      aws:cdk:path: WorkshopStack/SecurityAnalystRolePolicy/Resource
   SecurityAnalystRoleEF0E6AE5:
     Type: AWS::IAM::Role
     Properties:
@@ -1015,7 +1015,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/TeamRole
+                        - :role/
+                        - Ref: ParamBaseIAMRole
             Effect: Allow
             Principal:
               AWS:
@@ -1031,7 +1032,7 @@ Resources:
         - Ref: SecurityAnalystRolePolicy0E5470A7
       RoleName: SecurityAnalystRole
     Metadata:
-      aws:cdk:path: CoreStack/SecurityAnalystRole/Resource
+      aws:cdk:path: WorkshopStack/SecurityAnalystRole/Resource
   AthenaAdminRolePolicy978E0929:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -1221,7 +1222,7 @@ Resources:
       Description: ""
       Path: /
     Metadata:
-      aws:cdk:path: CoreStack/AthenaAdminRolePolicy/Resource
+      aws:cdk:path: WorkshopStack/AthenaAdminRolePolicy/Resource
   AthenaAdminRoleB2929A4F:
     Type: AWS::IAM::Role
     Properties:
@@ -1235,7 +1236,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/TeamRole
+                        - :role/
+                        - Ref: ParamBaseIAMRole
             Effect: Allow
             Principal:
               AWS:
@@ -1251,7 +1253,7 @@ Resources:
         - Ref: AthenaAdminRolePolicy978E0929
       RoleName: SecurityAdminRole
     Metadata:
-      aws:cdk:path: CoreStack/AthenaAdminRole/Resource
+      aws:cdk:path: WorkshopStack/AthenaAdminRole/Resource
   SecurityBreakGlassRoleAA43912E:
     Type: AWS::IAM::Role
     Properties:
@@ -1265,7 +1267,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/TeamRole
+                        - :role/
+                        - Ref: ParamBaseIAMRole
             Effect: Allow
             Principal:
               AWS:
@@ -1285,7 +1288,7 @@ Resources:
               - :iam::aws:policy/AdministratorAccess
       RoleName: SecurityBreakGlassRole
     Metadata:
-      aws:cdk:path: CoreStack/SecurityBreakGlassRole/Resource
+      aws:cdk:path: WorkshopStack/SecurityBreakGlassRole/Resource
   SecurityDeployRolePolicy4FCB2A30:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -1324,7 +1327,7 @@ Resources:
       Description: ""
       Path: /
     Metadata:
-      aws:cdk:path: CoreStack/SecurityDeployRolePolicy/Resource
+      aws:cdk:path: WorkshopStack/SecurityDeployRolePolicy/Resource
   SecurityDeployRoleEF875284:
     Type: AWS::IAM::Role
     Properties:
@@ -1338,7 +1341,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/TeamRole
+                        - :role/
+                        - Ref: ParamBaseIAMRole
             Effect: Allow
             Principal:
               AWS:
@@ -1354,7 +1358,7 @@ Resources:
         - Ref: SecurityDeployRolePolicy4FCB2A30
       RoleName: SecurityDeployRole
     Metadata:
-      aws:cdk:path: CoreStack/SecurityDeployRole/Resource
+      aws:cdk:path: WorkshopStack/SecurityDeployRole/Resource
   CloudTrailQueries:
     Type: AWS::Athena::NamedQuery
     Properties:
@@ -1617,7 +1621,7 @@ Resources:
       - AthenaWorkGroup
       - IRWorkshopGlueDatabase
     Metadata:
-      aws:cdk:path: CoreStack/CloudTrailQueries
+      aws:cdk:path: WorkshopStack/CloudTrailQueries
   DNSQueries:
     Type: AWS::Athena::NamedQuery
     Properties:
@@ -1745,7 +1749,7 @@ Resources:
       - AthenaWorkGroup
       - IRWorkshopGlueDatabase
     Metadata:
-      aws:cdk:path: CoreStack/DNSQueries
+      aws:cdk:path: WorkshopStack/DNSQueries
   vpcflowQueries:
     Type: AWS::Athena::NamedQuery
     Properties:
@@ -1943,13 +1947,73 @@ Resources:
       - AthenaWorkGroup
       - IRWorkshopGlueDatabase
     Metadata:
-      aws:cdk:path: CoreStack/vpcflowQueries
+      aws:cdk:path: WorkshopStack/vpcflowQueries
+  SystemIntegrationPolicy6FA12ED7:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: iam:*
+            Effect: Allow
+            Resource: "*"
+            Sid: AllowIAM
+        Version: "2012-10-17"
+      Description: ""
+      Path: /
+    Metadata:
+      aws:cdk:path: WorkshopStack/SystemIntegrationPolicy/Resource
+  CredentialExposure2C2BE0C1:
+    Type: AWS::IAM::User
+    Properties:
+      ManagedPolicyArns:
+        - Ref: SystemIntegrationPolicy6FA12ED7
+      UserName: integration
+    Metadata:
+      aws:cdk:path: WorkshopStack/CredentialExposure/Resource
+  CredentialExposureAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName:
+        Ref: CredentialExposure2C2BE0C1
+      Status: Active
+    Metadata:
+      aws:cdk:path: WorkshopStack/CredentialExposureAccessKey
+  CryptoMiningPolicyD641E830:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: ec2:*
+            Effect: Allow
+            Resource: "*"
+            Sid: AllowEC2
+        Version: "2012-10-17"
+      Description: ""
+      Path: /
+    Metadata:
+      aws:cdk:path: WorkshopStack/CryptoMiningPolicy/Resource
+  CryptoMiningCredentialF9F78A67:
+    Type: AWS::IAM::User
+    Properties:
+      ManagedPolicyArns:
+        - Ref: CryptoMiningPolicyD641E830
+      UserName: pipeline
+    Metadata:
+      aws:cdk:path: WorkshopStack/CryptoMiningCredential/Resource
+  CryptoMiningAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName:
+        Ref: CryptoMiningCredentialF9F78A67
+      Status: Active
+    Metadata:
+      aws:cdk:path: WorkshopStack/CryptoMiningAccessKey
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAE31SwW7CMAz9Fu4hDNikHcdgQ0gb6wCxs0lNyVoS5Dqgquq/L2mBwmUnP7+8OPZz+rLff5QPnRc45V0Vp71SWUJZLhlUKsbW5ExOsVhgbh0pFOOtiYBgj4wUki/HB8cB3Ur8xViztqYSoXCZD2X56lSKtfKMmhDZTKuipZu8EiqzLmYCnclyFUKQ1KASiQOKY8eF9NzEt6LYkkA1kOX6oIJwHY1F5Da+1NJtTPNsixbWMa5gk2HLt9woz63SENq/igN4m0UhzIGnwHiCQkSkjx62hWfG2+LxRdB0cs5G7E3d7dGwWKJypLmYknWHuoc7YuZtB9NYeYvfM3v6sEklNOxlubBN/5d4UUZkt9pTn2Agwbg1+I6oBIXBnobk95YdkWR5XmJIvh1S4Z9KtEn8Mrc6Ef+e3njmV847NFDX+7GUXoec+28T13f9CjOHtWICDBvI6wlq+6uqElHBO2t6Q/ksB53fXOsuOcN6j3LRxD+hECOmuAIAAA==
+      Analytics: v2:deflate64:H4sIAAAAAAAAE31Sy1LDMAz8Fu7GUAozHCnlMR1eoeVxVh01NU3tjizTyWTy78hJS8qF0642a0VeeaAHg3N9enQF23Bs8tVJbTyhrmcMZqXG3gWmaFhNMfhIBtV44TIgWCMjpeIl8iZyYocWOZhbtt41KjWuw1DX19GssHXuWAeZL62permrG2VKH3MmsKWu3xIkS0saVUSgPI9cadFuZBTDnhSaM11/bEwyfmRjlcW5tJrFuet+27Opj4xvMC+x13ttFII3FtL4v+ZEbidZgmfge2DcQqUyst9C+8YTJ7EI3xu6SXbViCXU5RodqxmaSJare/Jx087wR5hI7OC6KA/5Xem3j75olIW1rqe+m3+Pe2dGfmFFegIHBeZ9wH+F99BtcI8jYzCEB5TsKV35Ykiy0fIbSde79abiNSJVMkRhXSFrXthC/fv1IE15DLxEB22/T0+r3+s/y4PK27Oy3DJi67gBhjmE9m7tYpqmUVnFS+9OhvpSnx19BWuPKTq2a9TTDn8A937TOdICAAA=
     Metadata:
-      aws:cdk:path: CoreStack/CDKMetadata/Default
+      aws:cdk:path: WorkshopStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable
 Parameters:
   SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter:
@@ -1958,12 +2022,19 @@ Parameters:
   ParamCloudTrailProjectionEventStartDate:
     Type: String
     Default: 2021/06/14
+    Description: Athena CloudTrail Table Projection Partition Start Date
   ParamVPCFlowProjectionEventStartDate:
     Type: String
     Default: 2021/06/14
+    Description: Athena VPC Flow Table Projection Partition Start Date
   ParamDNSProjectionEventStartDate:
     Type: String
     Default: 2021/06/14
+    Description: Athena DNS Table Projection Partition Start Date
+  ParamBaseIAMRole:
+    Type: String
+    Default: TeamRole
+    Description: Existing IAM Role to be used to assume workshop IAM Roles
 Outputs:
   AthenaWorkgroupQueryOutputLocation:
     Description: Athena Workgroup queries output location
@@ -2008,6 +2079,26 @@ Outputs:
       Fn::GetAtt:
         - SecurityDeployRoleEF875284
         - Arn
+  CredentialExposureAccessKeySecret:
+    Description: IAM user access key secret for exposed credential scenario
+    Value:
+      Fn::GetAtt:
+        - CredentialExposureAccessKey
+        - SecretAccessKey
+  CredentialExposureAccessKeyId:
+    Description: IAM user access key id for exposed credential scenario
+    Value:
+      Ref: CredentialExposureAccessKey
+  CryptoMiningAccessKeySecret:
+    Description: IAM user access key secret for crypto mining scenario
+    Value:
+      Fn::GetAtt:
+        - CryptoMiningAccessKey
+        - SecretAccessKey
+  CryptoMiningAccessKeyId:
+    Description: IAM user access key id for crypto mining scenario
+    Value:
+      Ref: CryptoMiningAccessKey
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
