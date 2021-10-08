@@ -1,3 +1,9 @@
+---
+
+PLEASE NOTE THIS PLAYBOOK USES FICTITIOUS ENTITIES SUCH AS ```AKIAIOSFODNN7EXAMPLE``` FOR *IAM ACCESS KEY ID*, ```198.51.100.77``` FOR *IP ADDRESS*, AND ARBITRARY *DATE RANGES* FOR ATHENA QUERIES AND AWS CLI COMMANDS. YOU WILL NEED TO REPLACE THOSE WITH ACTUALS FROM THE AWS ACCOUNT YOU ARE USING. 
+
+---
+
 # IAM credential exposure playbook
 
 ## Preparation
@@ -405,6 +411,8 @@ Parse through the distilled information looking for patterns, extrapolate into b
 * * *
 
 ### Part 4: Containment
+
+The user ```JorgeSouza``` was the initial compromise vector, which created another user ```JaneDoe``` which in turn created the S3 bucket ```DOC-EXAMPLE-BUCKET```.
 
 #### Resource list for account ```777777777777```:
    * S3 Bucket: ```DOC-EXAMPLE-BUCKET```

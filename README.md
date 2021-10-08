@@ -4,7 +4,7 @@ This project is part of the workshop [Building Incident Response Playbooks for A
 
 ## DO NOT DEPLOY THE CODE FROM THIS REPOSITORY IN AN EXISTING AWS ACCOUNT YOU CURRENTLY USE. CREATE A NEW SANDBOX ACCOUNT FOR THE PURPOSE OF THIS WORKSHOP.
 
-### The stacks will fail deployment with resource name space collision or trying to enable existing services such as Amazon GuardDuty.
+### The stack will fail deployment with resource name space collision or trying to enable existing services such as Amazon GuardDuty.
 
 
 ## Sandbox environment
@@ -23,13 +23,11 @@ This project is part of the workshop [Building Incident Response Playbooks for A
 
 ## Architecture Overview
 
-There are two stacks, one to deploy the basic components, the ```CoreStack```, and another to create specific resources for simulation purposes, the ```SimulationStack```.
-
-An AWS CDK python application and AWS CloudFormation templates are provided for you to choose how to deploy.
+An AWS CDK application creates one stack named ```WorkshopStack``` containing the minimum environment required to support the development of Incident Response Playbooks. The components are listed in the next section.
 
 
-### CoreStack components:
-* Amazon S3 Bucket centralizing logs from all configured sources
+### WorkshopStack components:
+* Amazon S3 Bucket centralizing all required log sources
 * Amazon S3 Bucket for Athena queries results
 * A VPC with public and private subnets, internet gateway, NAT gateway, and one EC2 instance  
 * CloudTrail trail logging management and data events streaming to S3 bucket
@@ -41,8 +39,6 @@ An AWS CDK python application and AWS CloudFormation templates are provided for 
 * Athena administrator IAM Role to configure Athena and Glue
 * Security break glass IAM Role for containment, eradication, and recovery
 * Security deploy IAM Role for CloudFormation deployment of SimulationStack
-
-### SimulationStack components:
 * IAM User Access Key for EC2 crypto mining simulation
 * IAM User Access Key for IAM credential exposure simulation
 
@@ -57,8 +53,7 @@ An AWS CDK python application and AWS CloudFormation templates are provided for 
 Preferred deployment method for those with little coding and AWS experience.
 * Login to your AWS Account
 * Go to the [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation)
-* Create stack using cdk/cdk.out/CoreStack.yaml from the cloned repository
-* Create stack using cdk/cdk.out/SimulationStack.yaml from the cloned repository
+* Create stack using cdk/cdk.out/WorkshopStack.yaml from the cloned repository
 
 Refer to this page for getting started with [AWS CloudFormation](https://aws.amazon.com/cloudformation/getting-started/).
 
@@ -81,6 +76,7 @@ We recommend this method for those with excellent coding and AWS experience.
    * run ```npm install -g aws-cdk```
    * verify by running ```cdk --version``` to check version installed
 * Deploy the AWS CDK app
+   * run ```cdk bootstrap``` 
    * run ```cdk synth```
    * run ```cdk deploy``` 
 
