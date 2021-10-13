@@ -24,7 +24,6 @@ setuptools.setup(
     install_requires=[
         "aws-cdk.core==" + AWS_CDK_VERSION,
         "aws-cdk.aws-athena==" + AWS_CDK_VERSION,
-        "aws-cdk.aws-guardduty==" + AWS_CDK_VERSION,
         "aws-cdk.aws-s3==" + AWS_CDK_VERSION,
         "aws-cdk.aws-cloudtrail==" + AWS_CDK_VERSION,
         "aws-cdk.aws-glue==" + AWS_CDK_VERSION,

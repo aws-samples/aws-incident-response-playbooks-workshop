@@ -11,7 +11,6 @@ from aws_cdk import (
     aws_s3,
     aws_athena,
     aws_cloudtrail,
-    aws_guardduty,
     aws_glue,
     aws_ec2,
     aws_route53resolver,
@@ -70,11 +69,6 @@ class WorkshopStack(core.Stack):
             trail_name="IRWorkshopTrail",
         )
         cloutrail_trail.log_all_s3_data_events()
-        guardduty_detector = aws_guardduty.CfnDetector(
-            self,
-            "IRWorkshopGuardDutyDetector",
-            enable=True,
-        )
         vpc_subnets = [aws_ec2.SubnetConfiguration(
             subnet_type=aws_ec2.SubnetType.PUBLIC,
             name="Public",
@@ -464,25 +458,6 @@ class WorkshopStack(core.Stack):
             self,
             "SecurityAnalystRolePolicy",
             statements=[
-                aws_iam.PolicyStatement(
-                    sid="SecurityGuardDutyReadOnlyAccess",
-                    effect=aws_iam.Effect.ALLOW,
-                    actions=["guardduty:ListMembers",
-                             "guardduty:GetMembers",
-                             "guardduty:ListInvitations",
-                             "guardduty:ListDetectors",
-                             "guardduty:GetDetector",
-                             "guardduty:ListFindings",
-                             "guardduty:GetFindings",
-                             "guardduty:ListIPSets",
-                             "guardduty:GetIPSet",
-                             "guardduty:ListThreatIntelSets",
-                             "guardduty:GetThreatIntelSet",
-                             "guardduty:GetMasterAccount",
-                             "guardduty:GetInvitationsCount",
-                             "guardduty:GetFindingsStatistics"],
-                    resources=["*"]
-                ),
                 aws_iam.PolicyStatement(
                     sid="SecurityNamedQueryFullAccess",
                     effect=aws_iam.Effect.ALLOW,

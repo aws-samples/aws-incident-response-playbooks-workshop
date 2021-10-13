@@ -108,12 +108,6 @@ Resources:
       - BucketLogsPolicy239CFD00
     Metadata:
       aws:cdk:path: WorkshopStack/Trail/Resource
-  IRWorkshopGuardDutyDetector:
-    Type: AWS::GuardDuty::Detector
-    Properties:
-      Enable: true
-    Metadata:
-      aws:cdk:path: WorkshopStack/IRWorkshopGuardDutyDetector
   VPCB9E5F0B4:
     Type: AWS::EC2::VPC
     Properties:
@@ -813,24 +807,6 @@ Resources:
     Properties:
       PolicyDocument:
         Statement:
-          - Action:
-              - guardduty:ListMembers
-              - guardduty:GetMembers
-              - guardduty:ListInvitations
-              - guardduty:ListDetectors
-              - guardduty:GetDetector
-              - guardduty:ListFindings
-              - guardduty:GetFindings
-              - guardduty:ListIPSets
-              - guardduty:GetIPSet
-              - guardduty:ListThreatIntelSets
-              - guardduty:GetThreatIntelSet
-              - guardduty:GetMasterAccount
-              - guardduty:GetInvitationsCount
-              - guardduty:GetFindingsStatistics
-            Effect: Allow
-            Resource: "*"
-            Sid: SecurityGuardDutyReadOnlyAccess
           - Action:
               - athena:BatchGetNamedQuery
               - athena:CreateNamedQuery
@@ -2011,7 +1987,7 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAE31Sy1LDMAz8Fu7GUAozHCnlMR1eoeVxVh01NU3tjizTyWTy78hJS8qF0642a0VeeaAHg3N9enQF23Bs8tVJbTyhrmcMZqXG3gWmaFhNMfhIBtV44TIgWCMjpeIl8iZyYocWOZhbtt41KjWuw1DX19GssHXuWAeZL62permrG2VKH3MmsKWu3xIkS0saVUSgPI9cadFuZBTDnhSaM11/bEwyfmRjlcW5tJrFuet+27Opj4xvMC+x13ttFII3FtL4v+ZEbidZgmfge2DcQqUyst9C+8YTJ7EI3xu6SXbViCXU5RodqxmaSJare/Jx087wR5hI7OC6KA/5Xem3j75olIW1rqe+m3+Pe2dGfmFFegIHBeZ9wH+F99BtcI8jYzCEB5TsKV35Ykiy0fIbSde79abiNSJVMkRhXSFrXthC/fv1IE15DLxEB22/T0+r3+s/y4PK27Oy3DJi67gBhjmE9m7tYpqmUVnFS+9OhvpSnx19BWuPKTq2a9TTDn8A937TOdICAAA=
+      Analytics: v2:deflate64:H4sIAAAAAAAAE31SwVLCMBD9Fu4xCOiMRxGVYVSsgHjepkuJbRMm2cB0Ov13kxYoXDzt29e3m923HfDB4I7f9h7hYG9EkvUroQ3yakkgMjbRypJxgtgCrXZGIJtsVAQGCiQ0Ifl0tHMU0KXEFyaSpFY1C40rO+LVkxMZNsojakOkcynKjm7zmolcu4QMyJxXqxCCpAE1QzHk1XonArWOJixysS9auli1D3RooR3hCuIcO77jxtZqISEMehYH8DKLQpgDTYHwACWLjNx72DWeKW+AxydBO8kxG5O3b1ugIrZE4Yykcmq02zUzXBEzbzCo1rRL/Jrrw7tOayah4NVCt/Of4kkZGb2RnvoABSkmnZXXxLdtb3WKYyHQ2jf0Lpuw8v3I+NvlezS8Oh4yJF8OTemHSKVK/UE3MmX/fr1w05+dtqig6fejTXZef+5/naSprVmaO2wUz0AQg212aw5T1zWLStpq1R/xBz7s/Vopb4xTJAvkizb+AdBH5CW8AgAA
     Metadata:
       aws:cdk:path: WorkshopStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable

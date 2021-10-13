@@ -1,3 +1,11 @@
+# Version [0.3] - 2021-10-13
+
+## Changes
+
+### CoreStack
+* Removed GuardDuty
+* Removed GuardDuty IAM Policy statement
+
 # Version [0.2] - 2021-08-05
 
 ## Changes
