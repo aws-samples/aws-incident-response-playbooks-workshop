@@ -1,3 +1,11 @@
+# Version [0.4] - 2021-10-27
+
+## Changes
+
+### WorkShop Stack
+* Added cloudshell and cloudformation permissions to SecurityDeployRole
+
+
 # Version [0.3] - 2021-10-13
 
 ## Changes

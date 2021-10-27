@@ -782,8 +782,15 @@ class WorkshopStack(core.Stack):
                              "cloudformation:DescribeStackResources",
                              "cloudformation:GetTemplate",
                              "cloudformation:GetTemplateSummary",
+                             "cloudformation:ListStacks",
                              "cloudformation:ValidateTemplate",
                              "cloudformation:CreateUploadBucket"],
+                    resources=["*"]
+                ),
+                aws_iam.PolicyStatement(
+                    sid="CloudShellPermissions",
+                    effect=aws_iam.Effect.ALLOW,
+                    actions=["cloudshell:*"],
                     resources=["*"]
                 ),
                 aws_iam.PolicyStatement(

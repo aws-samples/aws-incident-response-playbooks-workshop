@@ -1277,11 +1277,16 @@ Resources:
               - cloudformation:DescribeStackResources
               - cloudformation:GetTemplate
               - cloudformation:GetTemplateSummary
+              - cloudformation:ListStacks
               - cloudformation:ValidateTemplate
               - cloudformation:CreateUploadBucket
             Effect: Allow
             Resource: "*"
             Sid: StackPermissions
+          - Action: cloudshell:*
+            Effect: Allow
+            Resource: "*"
+            Sid: CloudShellPermissions
           - Action:
               - s3:PutObject
               - s3:ListBucket
