@@ -851,6 +851,7 @@ Resources:
           - Action:
               - athena:GetDataCatalog
               - athena:ListDataCatalogs
+              - athena:GetCatalogImportStatus
               - athena:GetDatabase
               - athena:ListDatabases
               - athena:GetTableMetadata
@@ -1018,6 +1019,7 @@ Resources:
               - athena:BatchGetNamedQuery
               - athena:CreateNamedQuery
               - athena:DeleteNamedQuery
+              - athena:GetCatalogImportStatus
               - athena:GetNamedQuery
               - athena:ListNamedQueries
             Effect: Allow
