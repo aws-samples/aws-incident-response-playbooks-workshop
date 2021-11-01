@@ -91,6 +91,28 @@ The file ```simulation/simulate_credential_exposure_activity.sh``` is a bash scr
 
 * * *
 
+### IAM entitlements used for this playbook
+
+The following IAM Roles are available in the AWS account to assume
+
+#### SecurityAnalystRole
+- For Athena queries: custom IAM Policy
+- To perform analysis tasks: [ReadOnlyAccess](https://console.aws.amazon.com/iam/home#policies/arn:aws:iam::aws:policy/ReadOnlyAccess) 
+
+#### SecurityDeployRole
+- For resource deployment using CloudFormation
+
+#### SecurityBreakGlassRole
+- To perform containment, and eradication tasks: [AdministratorAccess](https://console.aws.amazon.com/iam/home#policies/arn:aws:iam::aws:policy/AdministratorAccess)
+
+#### SecurityAdminRole
+- To perform security tool administrative tasks such as Athena or GuardDuty administration: customer IAM Policy
+
+#### PLEASE NOTE: These roles can be accessed using CloudShell, for AWS CLI from a stand-alone device such as a laptop, you will need to configure them. Throughout this playbook they will be accessed using AWS CLI profile with the same name as the role. If you are using CloudShell, remove the `--profile` from the call.  
+
+* * *
+
+
 ## Incident Handling Process
 
 ### The incident response process has the following stages:
@@ -111,7 +133,7 @@ IAM Access Key with id AKIAIOSFODNN7EXAMPLE was found in plain text in a public 
 
 There are no technical detective controls to validate, therefore, check ownership of the IAM Access Key ID using the AWS CLI:
 ```
-aws sts get-access-key-info --access-key-id AKIAIOSFODNN7EXAMPLE --profile security_break_glass --region us-east-1
+aws sts get-access-key-info --access-key-id AKIAIOSFODNN7EXAMPLE --profile SecurityAnalystRole --region us-east-1
 {
     "Account": "777777777777"
 }
@@ -336,7 +358,7 @@ eventtime             |  awsregion  |  requestparameters                      | 
 
 * Attempt to retrieve the object from the S3 Bucket using AWS CLI:
 ```
-aws s3api get-object --bucket DOC-EXAMPLE-BUCKET --key stuff stuff --profile security-break-glass
+aws s3api get-object --bucket DOC-EXAMPLE-BUCKET --key stuff stuff --profile SecurityAnalystRole
 
 {
     "AcceptRanges": "bytes",
@@ -352,7 +374,7 @@ aws s3api get-object --bucket DOC-EXAMPLE-BUCKET --key stuff stuff --profile sec
 
 * Attempt to retrieve the S3 Bucket policy using AWS CLI:
 ```
-aws s3api get-bucket-policy --bucket DOC-EXAMPLE-BUCKET  --profile security-break-glass
+aws s3api get-bucket-policy --bucket DOC-EXAMPLE-BUCKET  --profile SecurityAnalystRole
 
 An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operation: The bucket policy does not exist
 
@@ -360,7 +382,7 @@ An error occurred (NoSuchBucketPolicy) when calling the GetBucketPolicy operatio
 
 * Attempt to retrieve the S3 Bucket ACL using AWS CLI:
 ```
-aws s3api get-bucket-acl --bucket DOC-EXAMPLE-BUCKET  --profile security-break-glass
+aws s3api get-bucket-acl --bucket DOC-EXAMPLE-BUCKET  --profile SecurityAnalystRole
 
 {
     "Owner": {
@@ -390,7 +412,7 @@ Parse through the distilled information looking for patterns, extrapolate into b
 1. What related alerts have been triggered? 
    * No related alerts have been triggered
 2. What is the classification of the data accessed?
-   * The service resources configuration probed by the actor is classified as "Internal"
+   * The service resource's configuration probed by the actor is classified as "Internal"
 3. What AWS services are not in the approved use list? 
    * All services accessed by the actor are allowed to be used by authorized users
 4. What AWS service configurations have been changed?
@@ -426,7 +448,7 @@ The user ```JorgeSouza``` was the initial compromise vector, which created anoth
 Please note IAM is [eventually consistent](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency), if during verification the ```"Status"``` shows ```"Active"```, just ```list-access-keys again``` and the ```"Status"``` will eventually show up as ```"Inactive"```.
 
 ```
-aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive --user-name JorgeSouza
+aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive --user-name JorgeSouza --profile SecurityBreakGlassRole
 (no output)
 
 
@@ -443,7 +465,7 @@ aws iam list-access-keys --user-name JorgeSouza
 }
 
 
-aws iam update-access-key --access-key-id AKIAI44QH8DHBEXAMPLE --status Inactive  --user-name JaneDoe
+aws iam update-access-key --access-key-id AKIAI44QH8DHBEXAMPLE --status Inactive  --user-name JaneDoe --profile SecurityBreakGlassRole
 (no output)
 
 aws iam list-access-keys --user-name JaneDoe
@@ -477,7 +499,7 @@ aws iam list-access-keys --user-name JaneDoe
 ```
 
 ```
-aws iam create-policy --policy-name iam-containment-policy --policy-document file://containment/iam_containment_policy.json
+aws iam create-policy --policy-name iam-containment-policy --policy-document file://containment/iam_containment_policy.json --profile SecurityBreakGlassRole
 {
     "Policy": {
         "PolicyName": "iam-containment-policy",
@@ -492,7 +514,7 @@ aws iam create-policy --policy-name iam-containment-policy --policy-document fil
         "UpdateDate": "2021-07-26T00:37:18+00:00"
     }
 }
-aws iam attach-user-policy --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --user-name JorgeSouza
+aws iam attach-user-policy --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --user-name JorgeSouza --profile SecurityBreakGlassRole
 (no output)
 
 aws iam list-attached-user-policies --user-name JorgeSouza
@@ -510,10 +532,10 @@ aws iam list-attached-user-policies --user-name JorgeSouza
 }
 
 
-aws iam attach-user-policy --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --user-name JaneDoe
+aws iam attach-user-policy --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --user-name JaneDoe --profile SecurityBreakGlassRole
 (no output)
 
-aws iam list-attached-user-policies --user-name JaneDoe
+aws iam list-attached-user-policies --user-name JaneDoe --profile SecurityBreakGlassRole
 {
     "AttachedPolicies": [
         {
@@ -539,7 +561,7 @@ aws iam list-attached-user-policies --user-name JaneDoe
           "Condition": {
               "StringNotLike": {
                   "aws:PrincipalArn": [
-                      "arn:aws:iam::777777777777:role/SecurityBreakGlass"
+                      "arn:aws:iam::777777777777:role/SecurityBreakGlassRole"
                   ]
               }
           },
@@ -557,10 +579,10 @@ aws iam list-attached-user-policies --user-name JaneDoe
 ```
 
 ```
-aws s3api put-bucket-policy --bucket DOC-EXAMPLE-BUCKET --policy file://containment/s3_bucket_containment_policy.json
+aws s3api put-bucket-policy --bucket DOC-EXAMPLE-BUCKET --policy file://containment/s3_bucket_containment_policy.json --profile SecurityBreakGlassRole
 (no output)
 
-aws s3api get-bucket-policy --bucket DOC-EXAMPLE-BUCKET | jq '[.[]|fromjson]' 
+aws s3api get-bucket-policy --bucket DOC-EXAMPLE-BUCKET --profile SecurityBreakGlassRole | jq '[.[]|fromjson]' 
 [
   {
     "Version": "2012-10-17",
@@ -601,9 +623,9 @@ aws s3api get-bucket-policy --bucket DOC-EXAMPLE-BUCKET | jq '[.[]|fromjson]'
 * Delete S3 Bucket
    * after preserving the objects in the S3 Bucket, force delete
 ```
-aws s3 rb s3://DOC-EXAMPLE-BUCKET --force
-delete: s3://DOC-EXAMPLE-BUCKET/stuff
-remove_bucket: DOC-EXAMPLE-BUCKET
+aws s3 rb s3://DOC-EXAMPLE-BUCKET --force --profile SecurityBreakGlassRole
+delete: s3://DOC-EXAMPLE-BUCKET/stuff --profile SecurityBreakGlassRole
+remove_bucket: DOC-EXAMPLE-BUCKET --profile SecurityBreakGlassRole
 
 ```
 
@@ -612,30 +634,30 @@ remove_bucket: DOC-EXAMPLE-BUCKET
 Please note IAM is [eventually consistent](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency), if during verification the users still exist, they will eventually be deleted.
 
 ```
-aws iam detach-user-policy --user-name JorgeSouza --policy-arn arn:aws:iam::777777777777:policy/SimulationStack-SystemJorgeSouzaPolicy6FA12ED7-1I709F3HY50FL
+aws iam detach-user-policy --user-name JorgeSouza --policy-arn arn:aws:iam::777777777777:policy/SimulationStack-SystemJorgeSouzaPolicy6FA12ED7-1I709F3HY50FL --profile SecurityBreakGlassRole
 (no output)
-aws iam detach-user-policy --user-name JorgeSouza --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy
+aws iam detach-user-policy --user-name JorgeSouza --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --profile SecurityBreakGlassRole
 (no output)
-aws iam delete-access-key --user-name JorgeSouza --access-key-id AKIAIOSFODNN7EXAMPLE
+aws iam delete-access-key --user-name JorgeSouza --access-key-id AKIAIOSFODNN7EXAMPLE --profile SecurityBreakGlassRole
 (no output)
-aws iam delete-user --user-name JorgeSouza
+aws iam delete-user --user-name JorgeSouza --profile SecurityBreakGlassRole
 (no output)
-aws iam get-user --user-name JorgeSouza
+aws iam get-user --user-name JorgeSouza --profile SecurityBreakGlassRole
 
 An error occurred (NoSuchEntity) when calling the GetUser operation: The user with name JorgeSouza cannot be found.
 
 
 
 
-aws iam detach-user-policy --user-name JaneDoe --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+aws iam detach-user-policy --user-name JaneDoe --policy-arn arn:aws:iam::aws:policy/AdministratorAccess --profile SecurityBreakGlassRole
 (no output)
-aws iam detach-user-policy --user-name JaneDoe --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy
+aws iam detach-user-policy --user-name JaneDoe --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --profile SecurityBreakGlassRole
 (no output)
-aws iam delete-access-key --user-name JaneDoe --access-key-id AKIAI44QH8DHBEXAMPLE
+aws iam delete-access-key --user-name JaneDoe --access-key-id AKIAI44QH8DHBEXAMPLE --profile SecurityBreakGlassRole
 (no output)
-aws iam delete-user --user-name JaneDoe
+aws iam delete-user --user-name JaneDoe --profile SecurityBreakGlassRole
 (no output)
-aws iam get-user --user-name JaneDoe
+aws iam get-user --user-name JaneDoe --profile SecurityBreakGlassRole
 
 An error occurred (NoSuchEntity) when calling the GetUser operation: The user with name JaneDoe cannot be found.
 

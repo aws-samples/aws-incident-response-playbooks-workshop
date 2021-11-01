@@ -95,6 +95,27 @@ The file ```simulation/simulate_crypto_mining_activity.sh``` is a bash script us
 
 * * *
 
+### IAM entitlements used for this playbook
+
+The following IAM Roles are available in the AWS account to assume
+
+#### SecurityAnalystRole
+- For Athena queries: custom IAM Policy
+- To perform analysis tasks: [ReadOnlyAccess](https://console.aws.amazon.com/iam/home#policies/arn:aws:iam::aws:policy/ReadOnlyAccess) 
+
+#### SecurityDeployRole
+- For resource deployment using CloudFormation
+
+#### SecurityBreakGlassRole
+- To perform containment, and eradication tasks: [AdministratorAccess](https://console.aws.amazon.com/iam/home#policies/arn:aws:iam::aws:policy/AdministratorAccess)
+
+#### SecurityAdminRole
+- To perform security tool administrative tasks such as Athena or GuardDuty administration: customer IAM Policy
+
+#### PLEASE NOTE: These roles can be accessed using CloudShell, for AWS CLI from a stand-alone device such as a laptop, you will need to configure them. Throughout this playbook they will be accessed using AWS CLI profile with the same name as the role. If you are using CloudShell, remove the `--profile` from the call.  
+
+* * *
+
 ## Incident Handling Process
 
 ### The incident response process has the following stages:
@@ -482,7 +503,7 @@ for sg in "${sgs[@]}"; do aws ec2 describe-security-groups --group-ids ${sg} --r
 
 ```
 # check EC2 instance's instance profile
-aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j --region us-east-1 --profile security_break_glass | jq -r '.Reservations[].Instances[].IamInstanceProfile'
+aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j --region us-east-1 --profile security_break_glass | jq -r '.Reservations[].Instances[].IamInstanceProfile' --profile SecurityAnalystRole
      
 ```
 
@@ -503,7 +524,7 @@ null
 
 ```
 # EC2 instance types and quantity
-aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j --region us-east-1 --profile security_break_glass | jq -r '.Reservations[].Instances[].InstanceType' | sort -n | uniq -c
+aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j --region us-east-1 --profile SecurityAnalystRole | jq -r '.Reservations[].Instances[].InstanceType' | sort -n | uniq -c
 ```
 
 * EC2 instance type is ```t2.nano```
@@ -514,7 +535,7 @@ aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b 
 
 ```
 # EC2 instance AMI
-aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j --region us-east-1 --profile security_break_glass | jq -r '.Reservations[].Instances[].ImageId' | sort -n | uniq -c
+aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j --region us-east-1 --profile SecurityAnalystRole | jq -r '.Reservations[].Instances[].ImageId' | sort -n | uniq -c
 ```
 
 * ami-0c2b8ca1dad447f8a
@@ -525,7 +546,7 @@ aws ec2 describe-instances --instance-ids i-021345abcdef678a i-021345abcdef678b 
 
 ```
 # Describe AMI
-aws ec2 describe-images --image-id ami-0c2b8ca1dad447f8a --region us-east-1 --profile security_break_glass
+aws ec2 describe-images --image-id ami-0c2b8ca1dad447f8a --region us-east-1 --profile SecurityAnalystRole
 
 ```
 
@@ -816,10 +837,10 @@ Parse through the distilled information looking for patterns, extrapolate into b
 Please note IAM is [eventually consistent](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency), if during verification the ```"Status"``` shows ```"Active"```, just ```list-access-keys again``` and the ```"Status"``` will eventually show up as ```"Inactive"```.
 
 ```
-aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive --user-name pipeline
+aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive --user-name pipeline --profile SecurityBreakGlassRole
 (no output)
 
-aws iam list-access-keys --user-name pipeline
+aws iam list-access-keys --user-name pipeline --profile SecurityBreakGlassRole
 {
     "AccessKeyMetadata": [
         {
@@ -832,10 +853,10 @@ aws iam list-access-keys --user-name pipeline
 }
 
 
-aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive  --user-name pipeline
+aws iam update-access-key --access-key-id AKIAIOSFODNN7EXAMPLE --status Inactive  --user-name pipeline --profile SecurityBreakGlassRole
 (no output)
 
-aws iam list-access-keys --user-name pipeline
+aws iam list-access-keys --user-name pipeline --profile SecurityBreakGlassRole
 {
     "AccessKeyMetadata": [
         {
@@ -866,7 +887,7 @@ aws iam list-access-keys --user-name pipeline
 ```
 
 ```
-aws iam create-policy --policy-name iam-containment-policy --policy-document file://containment/iam_containment_policy.json
+aws iam create-policy --policy-name iam-containment-policy --policy-document file://containment/iam_containment_policy.json --profile SecurityBreakGlassRole
 {
     "Policy": {
         "PolicyName": "iam-containment-policy",
@@ -881,10 +902,10 @@ aws iam create-policy --policy-name iam-containment-policy --policy-document fil
         "UpdateDate": "2021-07-26T00:37:18+00:00"
     }
 }
-aws iam attach-user-policy --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --user-name pipeline
+aws iam attach-user-policy --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --user-name pipeline --profile SecurityBreakGlassRole
 (no output)
 
-aws iam list-attached-user-policies --user-name pipeline
+aws iam list-attached-user-policies --user-name pipeline --profile SecurityBreakGlassRole
 {
     "AttachedPolicies": [
         {
@@ -906,7 +927,7 @@ aws iam list-attached-user-policies --user-name pipeline
 ```
 # Stop EC2 instances
 instances="i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j"
-for instance in ${instances}; do aws ec2 stop-instances --instance-ids ${instance} --region us-east-1 --profile security_break_glass; done 
+for instance in ${instances}; do aws ec2 stop-instances --instance-ids ${instance} --region us-east-1 --profile SecurityBreakGlassRole; done 
 ```
 
 * For each EC2 instance, you will receive a response like this:
@@ -932,7 +953,7 @@ for instance in ${instances}; do aws ec2 stop-instances --instance-ids ${instanc
 ```
 # Check EC2 instances state
 instances="i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j"
-for instance in ${instances}; do aws ec2 describe-instances --instance-ids ${instance} --region us-east-1 --profile security_break_glass | jq -r '.Reservations[].Instances[].State.Name'; done 
+for instance in ${instances}; do aws ec2 describe-instances --instance-ids ${instance} --region us-east-1 --profile SecurityBreakGlassRole | jq -r '.Reservations[].Instances[].State.Name'; done 
 ```
 
 * Once they are all stopped, this will be the output
@@ -977,15 +998,15 @@ stopped
 Please note IAM is [eventually consistent](https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency), if during verification the users still exist, they will eventually be deleted.
 
 ```
-aws iam detach-user-policy --user-name pipeline --policy-arn arn:aws:iam::777777777777:policy/SimulationStack-SystemIntegrationPolicy
+aws iam detach-user-policy --user-name pipeline --policy-arn arn:aws:iam::777777777777:policy/SimulationStack-SystemIntegrationPolicy --profile SecurityBreakGlassRole
 (no output)
-aws iam detach-user-policy --user-name pipeline --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy
+aws iam detach-user-policy --user-name pipeline --policy-arn arn:aws:iam::777777777777:policy/iam-containment-policy --profile SecurityBreakGlassRole
 (no output)
-aws iam delete-access-key --user-name pipeline --access-key-id AKIAIOSFODNN7EXAMPLE
+aws iam delete-access-key --user-name pipeline --access-key-id AKIAIOSFODNN7EXAMPLE --profile SecurityBreakGlassRole
 (no output)
-aws iam delete-user --user-name pipeline
+aws iam delete-user --user-name pipeline --profile SecurityBreakGlassRole
 (no output)
-aws iam get-user --user-name pipeline
+aws iam get-user --user-name pipeline --profile SecurityBreakGlassRole
 
 An error occurred (NoSuchEntity) when calling the GetUser operation: The user with name integration cannot be found.
 
@@ -996,7 +1017,7 @@ An error occurred (NoSuchEntity) when calling the GetUser operation: The user wi
 ```
 # Terminate EC2 instances
 instances="i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j"
-for instance in ${instances}; do aws ec2 terminate-instances --instance-ids ${instance} --region us-east-1 --profile security_break_glass; done 
+for instance in ${instances}; do aws ec2 terminate-instances --instance-ids ${instance} --region us-east-1 --profile SecurityBreakGlassRole; done 
 ```
 
 * For each EC2 instance, you will receive a response like this:
@@ -1022,7 +1043,7 @@ for instance in ${instances}; do aws ec2 terminate-instances --instance-ids ${in
 ```
 # Check EC2 instances state
 instances="i-021345abcdef678a i-021345abcdef678b i-021345abcdef678c i-021345abcdef678d i-021345abcdef678e i-021345abcdef678f i-021345abcdef678g i-021345abcdef678h i-021345abcdef678i i-021345abcdef678j"
-for instance in ${instances}; do aws ec2 describe-instances --instance-ids ${instance} --region us-east-1 --profile security_break_glass | jq -r '.Reservations[].Instances[].State.Name'; done 
+for instance in ${instances}; do aws ec2 describe-instances --instance-ids ${instance} --region us-east-1 --profile SecurityBreakGlassRole | jq -r '.Reservations[].Instances[].State.Name'; done 
 ```
 
 * Once all are terminated, you will receive this response

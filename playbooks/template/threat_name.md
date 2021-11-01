@@ -90,6 +90,27 @@ output expected
 
 * * *
 
+### IAM entitlements used for this playbook
+
+The following IAM Roles are available in the AWS account to assume
+
+#### SecurityAnalystRole
+- For Athena queries: custom IAM Policy
+- To perform analysis tasks: [ReadOnlyAccess](https://console.aws.amazon.com/iam/home#policies/arn:aws:iam::aws:policy/ReadOnlyAccess) 
+
+#### SecurityDeployRole
+- For resource deployment using CloudFormation
+
+#### SecurityBreakGlassRole
+- To perform containment, and eradication tasks: [AdministratorAccess](https://console.aws.amazon.com/iam/home#policies/arn:aws:iam::aws:policy/AdministratorAccess)
+
+#### SecurityAdminRole
+- To perform security tool administrative tasks such as Athena or GuardDuty administration: customer IAM Policy
+
+#### PLEASE NOTE: These roles can be accessed using CloudShell, for AWS CLI from a stand-alone device such as a laptop, you will need to configure them. Throughout this playbook they will be accessed using AWS CLI profile with the same name as the role. If you are using CloudShell, remove the `--profile` from the call.  
+
+* * *
+
 ## Incident Classification & Handling
 
 [//]: # (categorize the incident according to your organization's standards)

@@ -1007,6 +1007,11 @@ Resources:
         Version: "2012-10-17"
       ManagedPolicyArns:
         - Ref: SecurityAnalystRolePolicy0E5470A7
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/ReadOnlyAccess
       RoleName: SecurityAnalystRole
     Metadata:
       aws:cdk:path: WorkshopStack/SecurityAnalystRole/Resource
