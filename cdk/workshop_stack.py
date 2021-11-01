@@ -496,6 +496,7 @@ class WorkshopStack(core.Stack):
                     effect=aws_iam.Effect.ALLOW,
                     actions=["athena:GetDataCatalog",
                              "athena:ListDataCatalogs",
+                             "athena:GetCatalogImportStatus",
                              "athena:GetDatabase",
                              "athena:ListDatabases",
                              "athena:GetTableMetadata",
@@ -572,7 +573,8 @@ class WorkshopStack(core.Stack):
             self,
             "SecurityAnalystRole",
             role_name="SecurityAnalystRole",
-            managed_policies=[security_analyst_role_policy],
+            managed_policies=[security_analyst_role_policy,
+                              aws_iam.ManagedPolicy.from_aws_managed_policy_name("ReadOnlyAccess")],
             assumed_by=aws_iam.AccountPrincipal(
                 account_id=core.Aws.ACCOUNT_ID
             ).with_conditions(
@@ -601,6 +603,7 @@ class WorkshopStack(core.Stack):
                     actions=["athena:BatchGetNamedQuery",
                              "athena:CreateNamedQuery",
                              "athena:DeleteNamedQuery",
+                             "athena:GetCatalogImportStatus",
                              "athena:GetNamedQuery",
                              "athena:ListNamedQueries"],
                     resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,

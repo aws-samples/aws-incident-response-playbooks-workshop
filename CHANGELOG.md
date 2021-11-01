@@ -1,3 +1,14 @@
+# Version [0.5] - 2021-11-01
+
+## Changes
+
+### WorkShop Stack
+* Added ReadOnlyAccess permissions to SecurityDeployRole
+
+### Playbooks
+* Added IAM entitlements required to run playbook
+
+
 # Version [0.4] - 2021-10-27
 
 ## Changes
