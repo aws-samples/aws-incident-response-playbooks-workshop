@@ -108,7 +108,11 @@ The following IAM Roles are available in the AWS account to assume
 #### SecurityAdminRole
 - To perform security tool administrative tasks such as Athena or GuardDuty administration: customer IAM Policy
 
-#### PLEASE NOTE: These roles can be accessed using CloudShell, for AWS CLI from a stand-alone device such as a laptop, you will need to configure them. Throughout this playbook they will be accessed using AWS CLI profile with the same name as the role. If you are using CloudShell, remove the `--profile` from the call.  
+## Assuming Roles: 
+- CloudShell provides a Linux shell environment with temporary credentials associated with the current IAM Role you are signed in to the console. The AWS CLI will use these session tokens by default.
+- Alternatively you can install the AWS CLI in Windows, Linux, and MacOS and configure multiple IAM Roles to be assumed using the `-- profile` parameter.
+
+**All examples in this playbook use the `--profile` parameter to indicate the IAM Role required for the AWS CLI command. If you use CloudShell, remove the `--profile` parameter from the AWS CLI call.**
 
 * * *
 
