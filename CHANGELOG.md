@@ -1,3 +1,13 @@
+# Version [0.6] - 2021-11-09
+
+## Changes
+
+### WorkShop Stack
+* CloudFormation parameter changed to accept IAM User or Role as the principal to assume Security role
+
+### Playbooks
+* N/A
+
 # Version [0.5] - 2021-11-01
 
 ## Changes
