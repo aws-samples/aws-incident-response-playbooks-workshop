@@ -628,8 +628,8 @@ aws s3api get-bucket-policy --bucket DOC-EXAMPLE-BUCKET --profile SecurityBreakG
    * after preserving the objects in the S3 Bucket, force delete
 ```
 aws s3 rb s3://DOC-EXAMPLE-BUCKET --force --profile SecurityBreakGlassRole
-delete: s3://DOC-EXAMPLE-BUCKET/stuff --profile SecurityBreakGlassRole
-remove_bucket: DOC-EXAMPLE-BUCKET --profile SecurityBreakGlassRole
+delete: s3://DOC-EXAMPLE-BUCKET/stuff
+remove_bucket: DOC-EXAMPLE-BUCKET 
 
 ```
 

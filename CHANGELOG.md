@@ -6,7 +6,7 @@
 * CloudFormation parameter changed to accept IAM User or Role as the principal to assume Security role
 
 ### Playbooks
-* N/A
+* Typo with `aws s3 rb` command results
 
 # Version [0.5] - 2021-11-01
 
