@@ -446,12 +446,13 @@ class WorkshopStack(core.Stack):
             ),
         )
 
-        CfnParamBaseIAMRole = core.CfnParameter(
+        CfnParamBasePrincipal = core.CfnParameter(
             self,
-            "ParamBaseIAMRole",
+            "ParamBasePrincipal",
             type="String",
-            default="TeamRole",
-            description="Existing IAM Role to be used to assume workshop IAM Roles",
+            default="role/TeamRole",
+            description="".join(["IAM Principal to assume Security roles ",
+                                 "(usage: IAM User - prefix with user/, IAM Role - prefix with role/)"]),
         )
 
         security_analyst_role_policy = aws_iam.ManagedPolicy(
@@ -580,7 +581,7 @@ class WorkshopStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
@@ -734,7 +735,7 @@ class WorkshopStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
@@ -758,7 +759,7 @@ class WorkshopStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
@@ -828,7 +829,7 @@ class WorkshopStack(core.Stack):
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":role/" + CfnParamBaseIAMRole.value_as_string
+                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }

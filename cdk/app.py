@@ -6,6 +6,6 @@ from workshop_stack import WorkshopStack
 
 app = core.App()
 
-core_stack = WorkshopStack(app, "WorkshopStack")
+workshop_stack = WorkshopStack(app, "WorkshopStack")
 
 app.synth()

@@ -992,8 +992,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/
-                        - Ref: ParamBaseIAMRole
+                        - ":"
+                        - Ref: ParamBasePrincipal
             Effect: Allow
             Principal:
               AWS:
@@ -1219,8 +1219,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/
-                        - Ref: ParamBaseIAMRole
+                        - ":"
+                        - Ref: ParamBasePrincipal
             Effect: Allow
             Principal:
               AWS:
@@ -1250,8 +1250,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/
-                        - Ref: ParamBaseIAMRole
+                        - ":"
+                        - Ref: ParamBasePrincipal
             Effect: Allow
             Principal:
               AWS:
@@ -1329,8 +1329,8 @@ Resources:
                       - ""
                       - - "arn:aws:iam::"
                         - Ref: AWS::AccountId
-                        - :role/
-                        - Ref: ParamBaseIAMRole
+                        - ":"
+                        - Ref: ParamBasePrincipal
             Effect: Allow
             Principal:
               AWS:
@@ -2019,10 +2019,10 @@ Parameters:
     Type: String
     Default: 2021/06/14
     Description: Athena DNS Table Projection Partition Start Date
-  ParamBaseIAMRole:
+  ParamBasePrincipal:
     Type: String
-    Default: TeamRole
-    Description: Existing IAM Role to be used to assume workshop IAM Roles
+    Default: role/TeamRole
+    Description: "IAM Principal to assume Security roles (usage: IAM User - prefix with user/, IAM Role - prefix with role/)"
 Outputs:
   AthenaWorkgroupQueryOutputLocation:
     Description: Athena Workgroup queries output location
