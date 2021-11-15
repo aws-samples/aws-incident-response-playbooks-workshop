@@ -6,6 +6,14 @@
 # example: ```./simulate_crypto_mining_activity.sh crypto_mining us-east-1```
 # jq download https://stedolan.github.io/jq/download/
 #
+# Activity generated:
+# - discovery of public Amazon Linux 2 AMIs available in region
+# - discovery of VPCs available in AWS account
+# - discovery of Networks available in VPCs
+# - spin one t2.nano EC2 instance in each subnet for each VPC found
+# - EC2 instance has userdata defined in file `userdata.sh`
+# - `userdata.sh` performs multiple `dig` commands against known crypto currency related domains. no information
+#    is exchanged. if GuardDuty is enabled, will trigger crypto mining DNS findings.
 PROFILE=${1}
 REGION=${2}
 echo "retrieving AMZN Linux 2 AMI id"

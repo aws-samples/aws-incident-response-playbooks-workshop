@@ -6,6 +6,12 @@
 # example: ```./simulate_credential_exposure_activity.sh credential_exposure us-east-1```
 # jq download https://stedolan.github.io/jq/download/
 #
+# activity generated:
+# - creates an IAM User with administrative entitlements
+# - creates long term IAM Access Key fornew IAM User
+# - performs light recon activity with `list` and `describe` commands using the newly created IAM Access Key
+# - creates S3 Bucket and saves light recon output to it
+#
 PROFILE=${1}
 REGION=${2}
 PERSISTENCE_USER=$(echo "helpdesk-"$(uuidgen) | awk '{print tolower($0)}')
