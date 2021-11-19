@@ -6,6 +6,16 @@
 * Not applicable
 
 ### Playbooks
+* added to simulation folder scripts to remove resources created by simulation
+
+# Version [0.7] - 2021-11-15
+
+## Changes
+
+### WorkShop Stack
+* Not applicable
+
+### Playbooks
 * Comments added to simulation scripts 
 
 # Version [0.6] - 2021-11-09

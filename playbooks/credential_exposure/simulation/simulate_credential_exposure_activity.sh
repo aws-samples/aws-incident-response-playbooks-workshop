@@ -67,4 +67,11 @@ export AWS_SESSION_TOKEN=${AWS_ST}
 export AWS_ACCESS_KEY_ID=${AWS_ID}
 export AWS_SECRET_ACCESS_KEY=${AWS_SK}
 export AWS_DEFAULT_REGION=${AWS_DR}
+echo "${BUCKET_NAME}" > bucket.resources
+echo "${PERSISTENCE_USER}" > user.resources
+echo "resources created to be deleted after playbook is completed"
+echo "S3 Bucket $(cat bucket.resources)"
+echo "IAM User $(cat user.resources)"
+echo "save the files bucket.resources and user.resources for future use by the bash script undo_simulate_credential_exposure_activity.sh"
+echo "end of ${0}"
 
