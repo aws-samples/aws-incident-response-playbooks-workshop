@@ -1,3 +1,13 @@
+# Version [0.9] - 2021-11-24
+
+## Changes
+
+### WorkShop Stack
+* Added CloudShell entitlements to all roles
+
+### Playbooks
+* Not applicable
+
 # Version [0.8] - 2021-11-19
 
 ## Changes
