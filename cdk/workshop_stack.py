@@ -567,6 +567,12 @@ class WorkshopStack(core.Stack):
                     resources=[logging_bucket.bucket_arn,
                                athena_bucket.bucket_arn]
                 ),
+                aws_iam.PolicyStatement(
+                    sid="CloudShellPermissions",
+                    effect=aws_iam.Effect.ALLOW,
+                    actions=["cloudshell:*"],
+                    resources=["*"]
+                ),
             ]
         )
 
@@ -721,6 +727,12 @@ class WorkshopStack(core.Stack):
                              "s3:ListAllMyBuckets"],
                     resources=[logging_bucket.bucket_arn,
                                athena_bucket.bucket_arn]
+                ),
+                aws_iam.PolicyStatement(
+                    sid="CloudShellPermissions",
+                    effect=aws_iam.Effect.ALLOW,
+                    actions=["cloudshell:*"],
+                    resources=["*"]
                 ),
             ]
         )

@@ -974,6 +974,10 @@ Resources:
                   - BucketAthena8BD64EF0
                   - Arn
             Sid: ListLogAndOutputBuckets
+          - Action: cloudshell:*
+            Effect: Allow
+            Resource: "*"
+            Sid: CloudShellPermissions
         Version: "2012-10-17"
       Description: ""
       Path: /
@@ -1201,6 +1205,10 @@ Resources:
                   - BucketAthena8BD64EF0
                   - Arn
             Sid: ListLogAndOutputBuckets
+          - Action: cloudshell:*
+            Effect: Allow
+            Resource: "*"
+            Sid: CloudShellPermissions
         Version: "2012-10-17"
       Description: ""
       Path: /
