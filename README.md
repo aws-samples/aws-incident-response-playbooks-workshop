@@ -94,6 +94,7 @@ Consider the costs involved in deploying this solution beyond what is included w
 ## Related Resources
 
 ### AWS resources
+* [AWS Customer Playbook Framework](https://github.com/aws-samples/aws-customer-playbook-framework)
 * [AWS re:invent 2020: Building your cloud incident response program](https://www.youtube.com/watch?v=MW7kcXL6OVo)
 * [AWS Incident Response Playbook Samples (process only)](https://github.com/aws-samples/aws-incident-response-playbooks)
 * [AWS Cloud Adoption Framework Security Perspective](https://d0.awsstatic.com/whitepapers/AWS_CAF_Security_Perspective.pdf)
