@@ -828,6 +828,12 @@ class WorkshopStack(core.Stack):
                              "iam:GetPolicy"],
                     resources=["*"]
                 ),
+                aws_iam.PolicyStatement(
+                    sid="GuardDutyAdmin",
+                    effect=aws_iam.Effect.ALLOW,
+                    actions=["guardduty:*"],
+                    resources=["*"]
+                )
             ]
         )
 

@@ -1319,6 +1319,10 @@ Resources:
             Effect: Allow
             Resource: "*"
             Sid: IAMPermissions
+          - Action: guardduty:*
+            Effect: Allow
+            Resource: "*"
+            Sid: GuardDutyAdmin
         Version: "2012-10-17"
       Description: ""
       Path: /

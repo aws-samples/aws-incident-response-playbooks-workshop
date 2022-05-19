@@ -10,7 +10,7 @@ with open("README.md") as fp:
 
 setuptools.setup(
     name="BuildingAWSIRPlaybooksWorkshop",
-    version="0.0.2",
+    version="0.0.3",
 
     description="Building playbooks for incident response in AWS workshop",
     long_description=long_description,

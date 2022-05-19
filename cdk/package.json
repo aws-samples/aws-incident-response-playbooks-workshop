@@ -1,0 +1,11 @@
+{
+  "name": "aws-incident-response-playbooks-workshop",
+  "version": "0.0.3",
+  "description": "AWS CDK application supporting Incident Response Playbooks Development",
+  "main": "setup.js",
+  "author": "AWS Professional Services",
+  "license": "MIT-0",
+  "dependencies": {
+    "aws-cdk": "1.114.0"
+  }
+}

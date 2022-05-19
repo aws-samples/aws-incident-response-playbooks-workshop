@@ -6,7 +6,7 @@ This project is part of the workshop [Building Incident Response Playbooks for A
 
 ## Sandbox environment
 * This is a sandbox environment for learning purposes only. You will take the learnings from building a playbook in this controlled environment and adapt to your own environment.
-* CloudTrail, VPC Flow, and DNS logs are the fundamental pillars for threat detection and incident response in AWS. Focus on learning how to interpret them based on the activity generated.
+* GuardDuty, CloudTrail, VPC Flow, and DNS logs are the fundamental pillars for threat detection and incident response in AWS. Focus on learning how to interpret them based on the activity generated.
 
 ## Solving customer challenges around incident response in AWS
 * This project builds an environment in an AWS Account facilitating the development of playbooks enhancing customer's capability to respond to security events.
@@ -36,6 +36,7 @@ An AWS CDK application creates one stack named ```WorkshopStack``` containing th
 * Security deploy IAM Role for CloudFormation deployment of SimulationStack
 * IAM User Access Key for EC2 crypto mining simulation
 * IAM User Access Key for IAM credential exposure simulation
+* AWS GuardDuty for alerting (enabled manually)
 
 ![Image](readme-images/diagram.png)
 
@@ -88,8 +89,9 @@ Consider the costs involved in deploying this solution beyond what is included w
 * Amazon EC2: https://aws.amazon.com/ec2/pricing
 * AWS CloudTrail: https://aws.amazon.com/cloudtrail/pricing/
 * AWS Glue: https://aws.amazon.com/glue/pricing/
-
+* AWS GuardDuty (manual install): https://docs.aws.amazon.com/guardduty/latest/ug/monitoring_costs.html
 * * *
+
 
 ## Related Resources
 
