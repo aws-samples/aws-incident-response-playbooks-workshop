@@ -825,7 +825,10 @@ class WorkshopStack(core.Stack):
                              "iam:CreatePolicy",
                              "iam:CreateAccessKey",
                              "iam:GetUser",
-                             "iam:GetPolicy"],
+                             "iam:GetPolicy",
+                             "iam:CreateServiceLinkedRole",
+                             "iam:PutRolePolicy",
+                             "iam:DeleteRolePolicy"],
                     resources=["*"]
                 ),
                 aws_iam.PolicyStatement(
