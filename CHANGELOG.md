@@ -1,3 +1,18 @@
+# Version [1.0] - 2023-05-25
+
+## Changes
+
+### WorkShop Stack
+* Upgraded to AWS CDK v2
+* Updated AWS CDK constructs to new version
+* EC2 instance connect via AWS Systems Manager
+* EC2 instance opened to the internet for simulations
+* S3 Buckets using new defaults (no ACL, no Public Access)
+* Added [permissions](https://docs.aws.amazon.com/guardduty/latest/ug/security_iam_id-based-policy-examples.html#guardduty_enable-permissions) to enable GuardDuty to the Security Deploy role
+
+### Playbooks
+* Not applicable
+
 # Version [0.9] - 2021-11-24
 
 ## Changes

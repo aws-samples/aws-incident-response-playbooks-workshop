@@ -11,14 +11,14 @@ This project is part of the workshop [Building Incident Response Playbooks for A
 ## Solving customer challenges around incident response in AWS
 * This project builds an environment in an AWS Account facilitating the development of playbooks enhancing customer's capability to respond to security events.
 * [Amazon Athena](https://aws.amazon.com/athena/) provides analytical capabilities with pre-configured tables for querying [AWS CloudTrail](https://aws.amazon.com/cloudtrail/) logs, [Amazon VPC Flow logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html), and [Amazon Route53 VPC DNS logs](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html) centralized in An Amazon S3 Bucket.
-* Includes two (2) sample playbook addressing the ```IAM credential exposure```, and ```EC2 crypto mining``` threats, plus a ```template``` for you to develop additional scenarios.
+* Includes two (2) sample playbook addressing the `IAM credential exposure`, and `EC2 crypto mining` threats, plus a `template` for you to develop additional scenarios.
 * Includes Linux bash scripts to simulate the threats and practice the response laid out by the sample playbooks. Create your own scripts in Linux bash or other languages to support the development and testing of your own security event scenarios.
 
 * * *
 
 ## Architecture Overview
 
-An AWS CDK application creates one stack named ```WorkshopStack``` containing the minimum environment required to support the development of Incident Response Playbooks. The components are listed in the next section.
+An AWS CDK application creates one stack named `WorkshopStack` containing the minimum environment required to support the development of Incident Response Playbooks. The components are listed in the next section.
 
 
 ### WorkshopStack components:
@@ -55,26 +55,26 @@ Refer to this page for getting started with [AWS CloudFormation](https://aws.ama
 
 ### AWS CDK
 We recommend this method for those with excellent coding and AWS experience.  
-* Install ```node.js 10.13.0``` or later
-* Install ```Python 3.8``` or later
+* Install `node v18`
+  * check version running `node --version`
+* Install `Python 3.10`
+  * check version running `python --version`
 * Configure a python virtual environment
    * change directory to the root of the cloned repository
-   * run ```python -m venv .venv```
-   * run ```source .venv/bin/activate```
-   * run ```python -m pip install -r stacks/requirements.txt``` 
+   * run `python3 -m venv .venv`
+   * run `source .venv/bin/activate`
+   * run `python -m pip install -r stacks/requirements.txt` 
+* Install node modules
+  * run `npm i`
 * Install [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 * Create IAM credentials with permission to deploy AWS resources using CloudFormation
-* Configure IAM credentials
-   * run ```aws configure```
-   * verify by running ```aws sts get-caller-identity```
-* Install AWS CDK
-   * change directory to the root of the cloned repository
-   * run ```npm install -g aws-cdk```
-   * verify by running ```cdk --version``` to check version installed
+* Configure `AWS CLI` with IAM credentials
+   * run `aws configure`
+   * verify by running `aws sts get-caller-identity`
 * Deploy the AWS CDK app
-   * run ```cdk bootstrap``` 
-   * run ```cdk synth```
-   * run ```cdk deploy``` 
+   * run `cdk bootstrap` 
+   * run `cdk synth`
+   * run `cdk deploy` 
 
 Refer to this page for getting started with [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
 

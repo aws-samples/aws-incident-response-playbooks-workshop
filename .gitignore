@@ -8,7 +8,7 @@ __pycache__
 .idea
 .idea/*
 **/.DS_Store
-.cdk.staging
-cdk/cdk.out/*.out
-cdk/cdk.out/*.json
-.vscode/*
+cdk.out/*.out
+cdk.out/*.json
+.vscode
+node_modules

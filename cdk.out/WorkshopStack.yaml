@@ -1,12 +1,6 @@
 Resources:
   BucketLogs9C0DCA97:
     Type: AWS::S3::Bucket
-    Properties:
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
@@ -75,12 +69,6 @@ Resources:
       aws:cdk:path: WorkshopStack/BucketLogs/Policy/Resource
   BucketAthena8BD64EF0:
     Type: AWS::S3::Bucket
-    Properties:
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
@@ -123,13 +111,13 @@ Resources:
   VPCPublicSubnet1SubnetB4246D30:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 192.168.0.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 0
           - Fn::GetAZs: ""
+      CidrBlock: 192.168.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: aws-cdk:subnet-name
@@ -171,39 +159,16 @@ Resources:
       - VPCVPCGW99B986DC
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/DefaultRoute
-  VPCPublicSubnet1EIP6AD938E8:
-    Type: AWS::EC2::EIP
-    Properties:
-      Domain: vpc
-      Tags:
-        - Key: Name
-          Value: WorkshopStack/VPC/PublicSubnet1
-    Metadata:
-      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/EIP
-  VPCPublicSubnet1NATGatewayE0556630:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      SubnetId:
-        Ref: VPCPublicSubnet1SubnetB4246D30
-      AllocationId:
-        Fn::GetAtt:
-          - VPCPublicSubnet1EIP6AD938E8
-          - AllocationId
-      Tags:
-        - Key: Name
-          Value: WorkshopStack/VPC/PublicSubnet1
-    Metadata:
-      aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/NATGateway
   VPCPublicSubnet2Subnet74179F39:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 192.168.1.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 1
           - Fn::GetAZs: ""
+      CidrBlock: 192.168.1.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: aws-cdk:subnet-name
@@ -248,19 +213,19 @@ Resources:
   VPCPrivateSubnet1Subnet8BCA10E0:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 192.168.2.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 0
           - Fn::GetAZs: ""
+      CidrBlock: 192.168.2.0/24
       MapPublicIpOnLaunch: false
       Tags:
         - Key: aws-cdk:subnet-name
           Value: Private
         - Key: aws-cdk:subnet-type
-          Value: Private
+          Value: Isolated
         - Key: Name
           Value: WorkshopStack/VPC/PrivateSubnet1
     Metadata:
@@ -284,32 +249,22 @@ Resources:
         Ref: VPCPrivateSubnet1Subnet8BCA10E0
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/RouteTableAssociation
-  VPCPrivateSubnet1DefaultRouteAE1D6490:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId:
-        Ref: VPCPrivateSubnet1RouteTableBE8A6027
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId:
-        Ref: VPCPublicSubnet1NATGatewayE0556630
-    Metadata:
-      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/DefaultRoute
   VPCPrivateSubnet2SubnetCFCDAA7A:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 192.168.3.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 1
           - Fn::GetAZs: ""
+      CidrBlock: 192.168.3.0/24
       MapPublicIpOnLaunch: false
       Tags:
         - Key: aws-cdk:subnet-name
           Value: Private
         - Key: aws-cdk:subnet-type
-          Value: Private
+          Value: Isolated
         - Key: Name
           Value: WorkshopStack/VPC/PrivateSubnet2
     Metadata:
@@ -333,16 +288,6 @@ Resources:
         Ref: VPCPrivateSubnet2SubnetCFCDAA7A
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/RouteTableAssociation
-  VPCPrivateSubnet2DefaultRouteF4F5CFD2:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId:
-        Ref: VPCPrivateSubnet2RouteTable0A19E10E
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId:
-        Ref: VPCPublicSubnet1NATGatewayE0556630
-    Metadata:
-      aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/DefaultRoute
   VPCIGWB7E252D3:
     Type: AWS::EC2::InternetGateway
     Properties:
@@ -370,7 +315,12 @@ Resources:
           IpProtocol: "-1"
       SecurityGroupIngress:
         - CidrIp: 192.168.0.0/16
-          Description: allow SSH TCP/22 within VPC CIDR
+          Description: allow HTTPS TCP/443 within VPC CIDR
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+        - CidrIp: 0.0.0.0/0
+          Description: allow SSH TCP/22 to internet
           FromPort: 22
           IpProtocol: tcp
           ToPort: 22
@@ -378,7 +328,7 @@ Resources:
         Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/SecurityGroup/Resource
-  JustAnInstanceInstanceRole22F262AD:
+  instanceroleE47E3171:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -386,22 +336,21 @@ Resources:
           - Action: sts:AssumeRole
             Effect: Allow
             Principal:
-              Service:
-                Fn::Join:
-                  - ""
-                  - - ec2.
-                    - Ref: AWS::URLSuffix
+              Service: ec2.amazonaws.com
         Version: "2012-10-17"
-      Tags:
-        - Key: Name
-          Value: just_an_instance
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonSSMManagedInstanceCore
     Metadata:
-      aws:cdk:path: WorkshopStack/JustAnInstance/InstanceRole/Resource
+      aws:cdk:path: WorkshopStack/instance role/Resource
   JustAnInstanceInstanceProfileDAD55CBE:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
-        - Ref: JustAnInstanceInstanceRole22F262AD
+        - Ref: instanceroleE47E3171
     Metadata:
       aws:cdk:path: WorkshopStack/JustAnInstance/InstanceProfile
   JustAnInstanceA974E24E:
@@ -414,21 +363,21 @@ Resources:
       IamInstanceProfile:
         Ref: JustAnInstanceInstanceProfileDAD55CBE
       ImageId:
-        Ref: SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter
+        Ref: SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter
       InstanceType: t3.nano
       SecurityGroupIds:
         - Fn::GetAtt:
             - SecurityGroupDD263621
             - GroupId
       SubnetId:
-        Ref: VPCPrivateSubnet1Subnet8BCA10E0
+        Ref: VPCPublicSubnet1SubnetB4246D30
       Tags:
         - Key: Name
           Value: just_an_instance
       UserData:
         Fn::Base64: "#!/bin/bash"
     DependsOn:
-      - JustAnInstanceInstanceRole22F262AD
+      - instanceroleE47E3171
     Metadata:
       aws:cdk:path: WorkshopStack/JustAnInstance/Resource
   VPCFlowLog:
@@ -437,7 +386,6 @@ Resources:
       ResourceId:
         Ref: VPCB9E5F0B4
       ResourceType: VPC
-      TrafficType: ALL
       LogDestination:
         Fn::GetAtt:
           - BucketLogs9C0DCA97
@@ -445,6 +393,7 @@ Resources:
       LogDestinationType: s3
       LogFormat: ${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${vpc-id} ${subnet-id} ${instance-id} ${tcp-flags} ${type} ${pkt-srcaddr} ${pkt-dstaddr} ${region} ${az-id} ${sublocation-type} ${sublocation-id} ${pkt-src-aws-service} ${pkt-dst-aws-service} ${flow-direction} ${traffic-path}
       MaxAggregationInterval: 60
+      TrafficType: ALL
     Metadata:
       aws:cdk:path: WorkshopStack/VPCFlowLog
   DNSLogs:
@@ -1316,6 +1265,9 @@ Resources:
               - iam:CreateAccessKey
               - iam:GetUser
               - iam:GetPolicy
+              - iam:CreateServiceLinkedRole
+              - iam:PutRolePolicy
+              - iam:DeleteRolePolicy
             Effect: Allow
             Resource: "*"
             Sid: IAMPermissions
@@ -2011,14 +1963,14 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAE31SwVLCMBD9Fu4xCOiMRxGVYVSsgHjepkuJbRMm2cB0Ov13kxYoXDzt29e3m923HfDB4I7f9h7hYG9EkvUroQ3yakkgMjbRypJxgtgCrXZGIJtsVAQGCiQ0Ifl0tHMU0KXEFyaSpFY1C40rO+LVkxMZNsojakOkcynKjm7zmolcu4QMyJxXqxCCpAE1QzHk1XonArWOJixysS9auli1D3RooR3hCuIcO77jxtZqISEMehYH8DKLQpgDTYHwACWLjNx72DWeKW+AxydBO8kxG5O3b1ugIrZE4Yykcmq02zUzXBEzbzCo1rRL/Jrrw7tOayah4NVCt/Of4kkZGb2RnvoABSkmnZXXxLdtb3WKYyHQ2jf0Lpuw8v3I+NvlezS8Oh4yJF8OTemHSKVK/UE3MmX/fr1w05+dtqig6fejTXZef+5/naSprVmaO2wUz0AQg212aw5T1zWLStpq1R/xBz7s/Vopb4xTJAvkizb+AdBH5CW8AgAA
+      Analytics: v2:deflate64:H4sIAAAAAAAA/31RTW/CMAz9LdxDxqgm7cqYhtC+OmDsOLmpKVlLghIHVFX970ublo7LTn5+efaznSm/n/DJCM52LNJ8XMiEV2sCkTNPfVc24tWDEzkSm+9Uh0KIdSFFOdAhr5kotEvJgCx4tWlCI2lBzVBMebU9iobaxnMWu8QXrV2igsGAVtoRbiApcOAHbmatFhJIanURs9jIExAOPZaK0Hi88OwZys60y2bkt9wfUBFbo3BGUrkw2h1buytiqSyBEhhaDvip0OcXndVMwoFXKx1G7WOvjI3eSU+9goIM0+Fq18SnRdOwfZwJgdY+oz+oaba7iwxaXZzQ8Kpx6ZIPh6b0Q2RSZXOtdjJj/77+OVzNgPaooO33pU1+Wf8NDpi2tTXLCoet4hEIErDtbu0f1DVrfJwJ14jB+DIK0787OjrqR+klfoRUBuu4pL1WNxG/veXR6MdKOTZOkTwgX4X4CyDLRliZAgAA
     Metadata:
       aws:cdk:path: WorkshopStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable
 Parameters:
-  SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter:
+  SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
-    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
   ParamCloudTrailProjectionEventStartDate:
     Type: String
     Default: 2021/06/14
@@ -2033,8 +1985,12 @@ Parameters:
     Description: Athena DNS Table Projection Partition Start Date
   ParamBasePrincipal:
     Type: String
-    Default: role/TeamRole
+    Default: user/mrjones
     Description: "IAM Principal to assume Security roles (usage: IAM User - prefix with user/, IAM Role - prefix with role/)"
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
 Outputs:
   AthenaWorkgroupQueryOutputLocation:
     Description: Athena Workgroup queries output location
@@ -2171,4 +2127,17 @@ Conditions:
           - Fn::Equals:
               - Ref: AWS::Region
               - us-west-2
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
 

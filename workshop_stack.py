@@ -7,7 +7,10 @@
 ## Workshop stack
 """
 from aws_cdk import (
-    core,
+    Aws,
+    Stack,
+    CfnOutput,
+    CfnParameter,
     aws_s3,
     aws_athena,
     aws_cloudtrail,
@@ -17,17 +20,15 @@ from aws_cdk import (
     aws_iam,
 )
 
+from constructs import Construct
 
-class WorkshopStack(core.Stack):
-    def __init__(
-            self, scope: core.Construct, construct_id: str, **kwargs
-    ) -> None:
+class WorkshopStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
         logging_bucket = aws_s3.Bucket(
             self,
             "BucketLogs",
-            bucket_name=core.PhysicalName.GENERATE_IF_NEEDED,
-            block_public_access=aws_s3.BlockPublicAccess.BLOCK_ALL,
         )
         logging_bucket.add_to_resource_policy(
             aws_iam.PolicyStatement(
@@ -57,8 +58,6 @@ class WorkshopStack(core.Stack):
         athena_bucket = aws_s3.Bucket(
             self,
             "BucketAthena",
-            bucket_name=core.PhysicalName.GENERATE_IF_NEEDED,
-            block_public_access=aws_s3.BlockPublicAccess.BLOCK_ALL,
         )
         cloutrail_trail = aws_cloudtrail.Trail(
             self,
@@ -75,23 +74,17 @@ class WorkshopStack(core.Stack):
             cidr_mask=24
         ),
             aws_ec2.SubnetConfiguration(
-                subnet_type=aws_ec2.SubnetType.PRIVATE,
+                subnet_type=aws_ec2.SubnetType.PRIVATE_ISOLATED,
                 name="Private",
                 cidr_mask=24
             )]
         vpc = aws_ec2.Vpc(
             self,
             "VPC",
-            cidr="192.168.0.0/16",
+            ip_addresses=aws_ec2.IpAddresses.cidr("192.168.0.0/16"),
             max_azs=2,
             subnet_configuration=vpc_subnets,
-            nat_gateways=1,
-        )
-        amzn_linux = aws_ec2.MachineImage.latest_amazon_linux(
-            generation=aws_ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
-            edition=aws_ec2.AmazonLinuxEdition.STANDARD,
-            virtualization=aws_ec2.AmazonLinuxVirt.HVM,
-            storage=aws_ec2.AmazonLinuxStorage.GENERAL_PURPOSE,
+            nat_gateways=0,
         )
         security_group = aws_ec2.SecurityGroup(
             self,
@@ -100,9 +93,23 @@ class WorkshopStack(core.Stack):
             description="Allow all outbound and allow SSH from internet",
         )
         security_group.add_ingress_rule(
-            connection=aws_ec2.Port.tcp(22),
-            description="allow SSH TCP/22 within VPC CIDR",
+            connection=aws_ec2.Port.tcp(443),
+            description="allow HTTPS TCP/443 within VPC CIDR",
             peer=aws_ec2.Peer.ipv4("192.168.0.0/16"),
+        )
+        security_group.add_ingress_rule(
+            connection=aws_ec2.Port.tcp(22),
+            description="allow SSH TCP/22 to internet",
+            peer=aws_ec2.Peer.ipv4("0.0.0.0/0"),
+        )
+        just_an_instance_role = aws_iam.Role(
+                self,
+                "instance role",
+                assumed_by=aws_iam.ServicePrincipal("ec2.amazonaws.com"),
+                managed_policies=[
+                    aws_iam.ManagedPolicy.from_aws_managed_policy_name(
+                        "AmazonSSMManagedInstanceCore")
+                ],
         )
         just_an_instance = aws_ec2.Instance(
             self,
@@ -110,10 +117,13 @@ class WorkshopStack(core.Stack):
             allow_all_outbound=True,
             instance_name="just_an_instance",
             instance_type=aws_ec2.InstanceType("t3.nano"),
-            machine_image=amzn_linux,
+            machine_image=aws_ec2.MachineImage.latest_amazon_linux2023(),
             vpc=vpc,
-            vpc_subnets=vpc.public_subnets[1],
+            vpc_subnets=aws_ec2.SubnetSelection(
+                subnet_type=aws_ec2.SubnetType.PUBLIC
+            ),
             security_group=security_group,
+            role=just_an_instance_role,
         )
         vpc_flow_log = aws_ec2.CfnFlowLog(
             self,
@@ -142,7 +152,7 @@ class WorkshopStack(core.Stack):
             resolver_query_log_config_id=dns_logs.attr_id,
             resource_id=vpc.vpc_id,
         )
-        dns_logs_association.add_depends_on(dns_logs)
+        dns_logs_association.add_dependency(dns_logs)
         athena_workgroup_output_location = "".join(["s3://",
                                                     athena_bucket.bucket_name,
                                                     "/"])
@@ -167,13 +177,13 @@ class WorkshopStack(core.Stack):
                 )
             )
         )
-        core.CfnOutput(
+        CfnOutput(
             self,
             "AthenaWorkgroupQueryOutputLocation",
             description="Athena Workgroup queries output location",
             value=athena_workgroup_output_location,
         )
-        core.CfnOutput(
+        CfnOutput(
             self,
             "AthenaWorkgroupName",
             description="Athena Workgroup for workshop use",
@@ -182,12 +192,12 @@ class WorkshopStack(core.Stack):
         glue_database = aws_glue.CfnDatabase(
             self,
             "IRWorkshopGlueDatabase",
-            catalog_id=core.Aws.ACCOUNT_ID,
+            catalog_id=Aws.ACCOUNT_ID,
             database_input=aws_glue.CfnDatabase.DatabaseInputProperty(
                 name="irworkshopgluedatabase",
             ),
         )
-        CfnParamCloudTrailProjectionEventStartDate = core.CfnParameter(
+        CfnParamCloudTrailProjectionEventStartDate = CfnParameter(
             self,
             "ParamCloudTrailProjectionEventStartDate",
             type="String",
@@ -215,7 +225,7 @@ class WorkshopStack(core.Stack):
             "projection.region_partition.type": "enum",
             "projection.region_partition.values": RegionPartitionValues,
             "projection.account_partition.type": "enum",
-            "projection.account_partition.values": core.Aws.ACCOUNT_ID,
+            "projection.account_partition.values": Aws.ACCOUNT_ID,
             "storage.location.template": CloudTrailSource,
         }
         glue_table_cloudtrail_partition_keys = [
@@ -255,7 +265,7 @@ class WorkshopStack(core.Stack):
         logs_location = "".join(["s3://",
                                  logging_bucket.bucket_name,
                                  "/AWSLogs/"])
-        core.CfnOutput(
+        CfnOutput(
             self,
             "S3BucketLocationWithLogs",
             description="S3 Bucket location containing CloudTrail, VPC Flow, and DNS logs for workshop use",
@@ -264,7 +274,7 @@ class WorkshopStack(core.Stack):
         glue_table_cloudtrail = aws_glue.CfnTable(
             self,
             "IRWorkshopGlueTableCloudTrail",
-            catalog_id=core.Aws.ACCOUNT_ID,
+            catalog_id=Aws.ACCOUNT_ID,
             database_name="irworkshopgluedatabase",
             table_input=aws_glue.CfnTable.TableInputProperty(
                 name="irworkshopgluetablecloudtrail",
@@ -284,7 +294,7 @@ class WorkshopStack(core.Stack):
             ),
         )
 
-        CfnParamVPCFlowProjectionEventStartDate = core.CfnParameter(
+        CfnParamVPCFlowProjectionEventStartDate = CfnParameter(
             self,
             "ParamVPCFlowProjectionEventStartDate",
             type="String",
@@ -308,7 +318,7 @@ class WorkshopStack(core.Stack):
             "projection.region_partition.type": "enum",
             "projection.region_partition.values": RegionPartitionValues,
             "projection.account_partition.type": "enum",
-            "projection.account_partition.values": core.Aws.ACCOUNT_ID,
+            "projection.account_partition.values": Aws.ACCOUNT_ID,
             "storage.location.template": VPCFlowSource,
         }
         glue_table_vpcflow_partition_keys = [
@@ -354,7 +364,7 @@ class WorkshopStack(core.Stack):
         glue_table_vpcflow = aws_glue.CfnTable(
             self,
             "IRWorkshopGlueTableVPCFlow",
-            catalog_id=core.Aws.ACCOUNT_ID,
+            catalog_id=Aws.ACCOUNT_ID,
             database_name="irworkshopgluedatabase",
             table_input=aws_glue.CfnTable.TableInputProperty(
                 name="irworkshopgluetablevpcflow",
@@ -374,7 +384,7 @@ class WorkshopStack(core.Stack):
                 )
             ),
         )
-        CfnParamDNSProjectionEventStartDate = core.CfnParameter(
+        CfnParamDNSProjectionEventStartDate = CfnParameter(
             self,
             "ParamDNSProjectionEventStartDate",
             type="String",
@@ -398,7 +408,7 @@ class WorkshopStack(core.Stack):
             "projection.vpc_partition.type": "enum",
             "projection.vpc_partition.values": vpc.vpc_id,
             "projection.account_partition.type": "enum",
-            "projection.account_partition.values": core.Aws.ACCOUNT_ID,
+            "projection.account_partition.values": Aws.ACCOUNT_ID,
             "storage.location.template": DNSSource,
         }
         glue_table_dns_partition_keys = [
@@ -426,7 +436,7 @@ class WorkshopStack(core.Stack):
         glue_table_dns = aws_glue.CfnTable(
             self,
             "IRWorkshopGlueTableDNS",
-            catalog_id=core.Aws.ACCOUNT_ID,
+            catalog_id=Aws.ACCOUNT_ID,
             database_name="irworkshopgluedatabase",
             table_input=aws_glue.CfnTable.TableInputProperty(
                 name="irworkshopgluetabledns",
@@ -446,7 +456,7 @@ class WorkshopStack(core.Stack):
             ),
         )
 
-        CfnParamBasePrincipal = core.CfnParameter(
+        CfnParamBasePrincipal = CfnParameter(
             self,
             "ParamBasePrincipal",
             type="String",
@@ -467,7 +477,7 @@ class WorkshopStack(core.Stack):
                              "athena:DeleteNamedQuery",
                              "athena:GetNamedQuery",
                              "athena:ListNamedQueries"],
-                    resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:athena:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":workgroup/", athena_workgroup.name])]
                 ),
                 aws_iam.PolicyStatement(
@@ -483,7 +493,7 @@ class WorkshopStack(core.Stack):
                              "athena:ListTagsForResource",
                              "athena:StartQueryExecution",
                              "athena:StopQueryExecution"],
-                    resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:athena:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":workgroup/", athena_workgroup.name])]
                 ),
                 aws_iam.PolicyStatement(
@@ -502,7 +512,7 @@ class WorkshopStack(core.Stack):
                              "athena:ListDatabases",
                              "athena:GetTableMetadata",
                              "athena:ListTableMetadata"],
-                    resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:athena:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":datacatalog/", athena_workgroup.name])]
                 ),
                 aws_iam.PolicyStatement(
@@ -510,9 +520,9 @@ class WorkshopStack(core.Stack):
                     effect=aws_iam.Effect.ALLOW,
                     actions=["glue:GetDatabase",
                              "glue:GetDatabases"],
-                    resources=["".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":database/", glue_database.database_input.name]),
-                               "".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                               "".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":catalog"])
                                ]
                 ),
@@ -521,11 +531,11 @@ class WorkshopStack(core.Stack):
                     effect=aws_iam.Effect.ALLOW,
                     actions=["glue:GetTable",
                              "glue:GetTables"],
-                    resources=["".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":table/", glue_database.database_input.name, "/*"]),
-                               "".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                               "".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":database/", glue_database.database_input.name]),
-                               "".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                               "".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":catalog"])
                                ]
                 ),
@@ -535,7 +545,7 @@ class WorkshopStack(core.Stack):
                     actions=["glue:BatchGetPartition",
                              "glue:GetPartition",
                              "glue:GetPartitions"],
-                    resources=["".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":database/", athena_workgroup.name])]
                 ),
                 aws_iam.PolicyStatement(
@@ -583,17 +593,17 @@ class WorkshopStack(core.Stack):
             managed_policies=[security_analyst_role_policy,
                               aws_iam.ManagedPolicy.from_aws_managed_policy_name("ReadOnlyAccess")],
             assumed_by=aws_iam.AccountPrincipal(
-                account_id=core.Aws.ACCOUNT_ID
+                account_id=Aws.ACCOUNT_ID
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
+                        "arn:aws:iam::" + Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
             )
         )
-        core.CfnOutput(
+        CfnOutput(
             self,
             "SecurityAnalystRoleARNforAthena",
             description="Role ARN to be assumed by security analyst for Athena use",
@@ -613,7 +623,7 @@ class WorkshopStack(core.Stack):
                              "athena:GetCatalogImportStatus",
                              "athena:GetNamedQuery",
                              "athena:ListNamedQueries"],
-                    resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:athena:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":workgroup/*"])
                                ]
                 ),
@@ -633,7 +643,7 @@ class WorkshopStack(core.Stack):
                              "athena:ListTagsForResource",
                              "athena:StartQueryExecution",
                              "athena:StopQueryExecution"],
-                    resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:athena:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":workgroup/*"])
                                ]
                 ),
@@ -649,7 +659,7 @@ class WorkshopStack(core.Stack):
                              "athena:ListDatabases",
                              "athena:GetTableMetadata",
                              "athena:ListTableMetadata"],
-                    resources=["".join(["arn:aws:athena:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:athena:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":datacatalog/*"])
                                ]
                 ),
@@ -661,9 +671,9 @@ class WorkshopStack(core.Stack):
                              "glue:GetDatabase",
                              "glue:GetDatabases",
                              "glue:UpdateDatabase"],
-                    resources=["".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":database/*"]),
-                               "".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                               "".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":catalog"])
                                ]
                 ),
@@ -676,11 +686,11 @@ class WorkshopStack(core.Stack):
                              "glue:GetTables",
                              "glue:GetTable",
                              "glue:UpdateTable"],
-                    resources=["".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":table/*"]),
-                               "".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                               "".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":database/*"]),
-                               "".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                               "".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":catalog"])
                                ]
                 ),
@@ -695,7 +705,7 @@ class WorkshopStack(core.Stack):
                              "glue:GetPartitions",
                              "glue:BatchGetPartition",
                              "glue:UpdatePartition"],
-                    resources=["".join(["arn:aws:glue:", core.Aws.REGION, ":", core.Aws.ACCOUNT_ID,
+                    resources=["".join(["arn:aws:glue:", Aws.REGION, ":", Aws.ACCOUNT_ID,
                                         ":database/*"])]
                 ),
                 aws_iam.PolicyStatement(
@@ -743,18 +753,18 @@ class WorkshopStack(core.Stack):
             role_name="SecurityAdminRole",
             managed_policies=[athena_admin_role_policy],
             assumed_by=aws_iam.AccountPrincipal(
-                account_id=core.Aws.ACCOUNT_ID
+                account_id=Aws.ACCOUNT_ID
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
+                        "arn:aws:iam::" + Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
             )
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "AthenaAdminRoleARN",
             description="Role ARN to be assumed by Athena administrator",
@@ -767,18 +777,18 @@ class WorkshopStack(core.Stack):
             role_name="SecurityBreakGlassRole",
             managed_policies=[aws_iam.ManagedPolicy.from_aws_managed_policy_name("AdministratorAccess")],
             assumed_by=aws_iam.AccountPrincipal(
-                account_id=core.Aws.ACCOUNT_ID
+                account_id=Aws.ACCOUNT_ID
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
+                        "arn:aws:iam::" + Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
             )
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "SecurityBreakGlassRoleArn",
             description="Role ARN for Break Glass purposes during incidents",
@@ -825,7 +835,10 @@ class WorkshopStack(core.Stack):
                              "iam:CreatePolicy",
                              "iam:CreateAccessKey",
                              "iam:GetUser",
-                             "iam:GetPolicy"],
+                             "iam:GetPolicy",
+                             "iam:CreateServiceLinkedRole",
+                             "iam:PutRolePolicy",
+                             "iam:DeleteRolePolicy"],
                     resources=["*"]
                 ),
                 aws_iam.PolicyStatement(
@@ -843,18 +856,18 @@ class WorkshopStack(core.Stack):
             role_name="SecurityDeployRole",
             managed_policies=[security_deploy_role_policy],
             assumed_by=aws_iam.AccountPrincipal(
-                account_id=core.Aws.ACCOUNT_ID
+                account_id=Aws.ACCOUNT_ID
             ).with_conditions(
                 {"StringEquals": {
                     "aws:PrincipalArn": [
-                        "arn:aws:iam::" + core.Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
+                        "arn:aws:iam::" + Aws.ACCOUNT_ID + ":" + CfnParamBasePrincipal.value_as_string
                     ]
                 }
                 }
             )
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "SecurityDeployRoleArn",
             description="Role ARN to be assumed for resource deployment",
@@ -873,8 +886,8 @@ class WorkshopStack(core.Stack):
             name="CloudTrailExampleQueries",
             query_string=sql_string,
         )
-        cloudtrail_queries.add_depends_on(athena_workgroup)
-        cloudtrail_queries.add_depends_on(glue_database)
+        cloudtrail_queries.add_dependency(athena_workgroup)
+        cloudtrail_queries.add_dependency(glue_database)
 
         with open("analytics/dns/dns_demo_queries.sql") as f:
             sql_string = f.read()
@@ -888,8 +901,8 @@ class WorkshopStack(core.Stack):
             name="DNSExampleQueries",
             query_string=sql_string,
         )
-        dns_queries.add_depends_on(athena_workgroup)
-        dns_queries.add_depends_on(glue_database)
+        dns_queries.add_dependency(athena_workgroup)
+        dns_queries.add_dependency(glue_database)
 
         with open("analytics/vpcflow/vpcflow_demo_queries.sql") as f:
             sql_string = f.read()
@@ -903,8 +916,8 @@ class WorkshopStack(core.Stack):
             name="VPCFlowExampleQueries",
             query_string=sql_string,
         )
-        vpcflow_queries.add_depends_on(athena_workgroup)
-        vpcflow_queries.add_depends_on(glue_database)
+        vpcflow_queries.add_dependency(athena_workgroup)
+        vpcflow_queries.add_dependency(glue_database)
 
         exposed_credential_policy = aws_iam.ManagedPolicy(
             self,
@@ -934,14 +947,14 @@ class WorkshopStack(core.Stack):
             status="Active",
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "CredentialExposureAccessKeySecret",
             description="IAM user access key secret for exposed credential scenario",
             value=exposed_credential_access_key.attr_secret_access_key,
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "CredentialExposureAccessKeyId",
             description="IAM user access key id for exposed credential scenario",
@@ -976,14 +989,14 @@ class WorkshopStack(core.Stack):
             status="Active",
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "CryptoMiningAccessKeySecret",
             description="IAM user access key secret for crypto mining scenario",
             value=crypto_mining_credential_access_key.attr_secret_access_key,
         )
 
-        core.CfnOutput(
+        CfnOutput(
             self,
             "CryptoMiningAccessKeyId",
             description="IAM user access key id for crypto mining scenario",
