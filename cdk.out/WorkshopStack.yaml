@@ -1985,7 +1985,7 @@ Parameters:
     Description: Athena DNS Table Projection Partition Start Date
   ParamBasePrincipal:
     Type: String
-    Default: user/mrjones
+    Default: role/TeamRole
     Description: "IAM Principal to assume Security roles (usage: IAM User - prefix with user/, IAM Role - prefix with role/)"
   BootstrapVersion:
     Type: AWS::SSM::Parameter::Value<String>
