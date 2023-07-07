@@ -116,7 +116,7 @@ class WorkshopStack(Stack):
             "JustAnInstance",
             allow_all_outbound=True,
             instance_name="just_an_instance",
-            instance_type=aws_ec2.InstanceType("t3.nano"),
+            instance_type=aws_ec2.InstanceType("t3.small"),
             machine_image=aws_ec2.MachineImage.latest_amazon_linux2023(),
             vpc=vpc,
             vpc_subnets=aws_ec2.SubnetSelection(

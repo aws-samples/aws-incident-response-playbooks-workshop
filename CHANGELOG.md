@@ -1,3 +1,16 @@
+# Version [1.1] - 2023-07-07
+
+## Changes
+
+### WorkShop Stack
+* Upgraded to AWS CDK version `2.87.0`
+* EC2 instance type changed to `t3.small`
+* Removed CDK metadata from cdk.out/WorkshopStack.yaml
+* Added script for CDK metadata from CloudFormation template for direct deployment to CloudFormation without using AWS CDK
+
+### Playbooks
+* Not applicable
+
 # Version [1.0] - 2023-05-25
 
 ## Changes
