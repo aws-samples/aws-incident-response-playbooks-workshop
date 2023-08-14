@@ -1,3 +1,14 @@
+# Version [1.2] - 2023-08-14
+
+## Changes
+
+### WorkShop Stack
+* Updated base role from `TeamRole` to `WSParticipantRole` to be used in AWS Workshop Studio events
+* Upgraded to AWS CDK version `2.91.0`
+
+### Playbooks
+* Not applicable
+
 # Version [1.1] - 2023-07-07
 
 ## Changes

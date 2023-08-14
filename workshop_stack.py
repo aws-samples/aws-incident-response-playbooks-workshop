@@ -460,7 +460,7 @@ class WorkshopStack(Stack):
             self,
             "ParamBasePrincipal",
             type="String",
-            default="role/TeamRole",
+            default="role/WSParticipantRole",
             description="".join(["IAM Principal to assume Security roles ",
                                  "(usage: IAM User - prefix with user/, IAM Role - prefix with role/)"]),
         )

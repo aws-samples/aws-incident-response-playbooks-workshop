@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT-0
 import setuptools
 
-AWS_CDK_VERSION = "2.87"
+AWS_CDK_VERSION = "2.91"
 
 with open("README.md") as fp:
     long_description = fp.read()

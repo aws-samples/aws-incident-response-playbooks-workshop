@@ -76,9 +76,6 @@ Resources:
   Trail022F0CF2:
     Type: AWS::CloudTrail::Trail
     Properties:
-      IsLogging: true
-      S3BucketName:
-        Ref: BucketLogs9C0DCA97
       EnableLogFileValidation: true
       EventSelectors:
         - DataResources:
@@ -90,7 +87,10 @@ Resources:
                       - Ref: AWS::Partition
                       - ":s3:::"
       IncludeGlobalServiceEvents: true
+      IsLogging: true
       IsMultiRegionTrail: true
+      S3BucketName:
+        Ref: BucketLogs9C0DCA97
       TrailName: IRWorkshopTrail
     DependsOn:
       - BucketLogsPolicy239CFD00
@@ -111,8 +111,6 @@ Resources:
   VPCPublicSubnet1SubnetB4246D30:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 0
@@ -126,16 +124,18 @@ Resources:
           Value: Public
         - Key: Name
           Value: WorkshopStack/VPC/PublicSubnet1
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/Subnet
   VPCPublicSubnet1RouteTableFEE4B781:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
           Value: WorkshopStack/VPC/PublicSubnet1
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PublicSubnet1/RouteTable
   VPCPublicSubnet1RouteTableAssociation0B0896DC:
@@ -150,11 +150,11 @@ Resources:
   VPCPublicSubnet1DefaultRoute91CEF279:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId:
-        Ref: VPCPublicSubnet1RouteTableFEE4B781
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId:
         Ref: VPCIGWB7E252D3
+      RouteTableId:
+        Ref: VPCPublicSubnet1RouteTableFEE4B781
     DependsOn:
       - VPCVPCGW99B986DC
     Metadata:
@@ -162,8 +162,6 @@ Resources:
   VPCPublicSubnet2Subnet74179F39:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 1
@@ -177,16 +175,18 @@ Resources:
           Value: Public
         - Key: Name
           Value: WorkshopStack/VPC/PublicSubnet2
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PublicSubnet2/Subnet
   VPCPublicSubnet2RouteTable6F1A15F1:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
           Value: WorkshopStack/VPC/PublicSubnet2
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PublicSubnet2/RouteTable
   VPCPublicSubnet2RouteTableAssociation5A808732:
@@ -201,11 +201,11 @@ Resources:
   VPCPublicSubnet2DefaultRouteB7481BBA:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId:
-        Ref: VPCPublicSubnet2RouteTable6F1A15F1
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId:
         Ref: VPCIGWB7E252D3
+      RouteTableId:
+        Ref: VPCPublicSubnet2RouteTable6F1A15F1
     DependsOn:
       - VPCVPCGW99B986DC
     Metadata:
@@ -213,8 +213,6 @@ Resources:
   VPCPrivateSubnet1Subnet8BCA10E0:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 0
@@ -228,16 +226,18 @@ Resources:
           Value: Isolated
         - Key: Name
           Value: WorkshopStack/VPC/PrivateSubnet1
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/Subnet
   VPCPrivateSubnet1RouteTableBE8A6027:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
           Value: WorkshopStack/VPC/PrivateSubnet1
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PrivateSubnet1/RouteTable
   VPCPrivateSubnet1RouteTableAssociation347902D1:
@@ -252,8 +252,6 @@ Resources:
   VPCPrivateSubnet2SubnetCFCDAA7A:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 1
@@ -267,16 +265,18 @@ Resources:
           Value: Isolated
         - Key: Name
           Value: WorkshopStack/VPC/PrivateSubnet2
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/Subnet
   VPCPrivateSubnet2RouteTable0A19E10E:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       Tags:
         - Key: Name
           Value: WorkshopStack/VPC/PrivateSubnet2
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/PrivateSubnet2/RouteTable
   VPCPrivateSubnet2RouteTableAssociation0C73D413:
@@ -299,10 +299,10 @@ Resources:
   VPCVPCGW99B986DC:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId:
-        Ref: VPCB9E5F0B4
       InternetGatewayId:
         Ref: VPCIGWB7E252D3
+      VpcId:
+        Ref: VPCB9E5F0B4
     Metadata:
       aws:cdk:path: WorkshopStack/VPC/VPCGW
   SecurityGroupDD263621:
@@ -383,9 +383,6 @@ Resources:
   VPCFlowLog:
     Type: AWS::EC2::FlowLog
     Properties:
-      ResourceId:
-        Ref: VPCB9E5F0B4
-      ResourceType: VPC
       LogDestination:
         Fn::GetAtt:
           - BucketLogs9C0DCA97
@@ -393,6 +390,9 @@ Resources:
       LogDestinationType: s3
       LogFormat: ${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${vpc-id} ${subnet-id} ${instance-id} ${tcp-flags} ${type} ${pkt-srcaddr} ${pkt-dstaddr} ${region} ${az-id} ${sublocation-type} ${sublocation-id} ${pkt-src-aws-service} ${pkt-dst-aws-service} ${flow-direction} ${traffic-path}
       MaxAggregationInterval: 60
+      ResourceId:
+        Ref: VPCB9E5F0B4
+      ResourceType: VPC
       TrafficType: ALL
     Metadata:
       aws:cdk:path: WorkshopStack/VPCFlowLog
@@ -754,6 +754,8 @@ Resources:
   SecurityAnalystRolePolicy0E5470A7:
     Type: AWS::IAM::ManagedPolicy
     Properties:
+      Description: ""
+      Path: /
       PolicyDocument:
         Statement:
           - Action:
@@ -928,8 +930,6 @@ Resources:
             Resource: "*"
             Sid: CloudShellPermissions
         Version: "2012-10-17"
-      Description: ""
-      Path: /
     Metadata:
       aws:cdk:path: WorkshopStack/SecurityAnalystRolePolicy/Resource
   SecurityAnalystRoleEF0E6AE5:
@@ -971,6 +971,8 @@ Resources:
   AthenaAdminRolePolicy978E0929:
     Type: AWS::IAM::ManagedPolicy
     Properties:
+      Description: ""
+      Path: /
       PolicyDocument:
         Statement:
           - Action:
@@ -1159,8 +1161,6 @@ Resources:
             Resource: "*"
             Sid: CloudShellPermissions
         Version: "2012-10-17"
-      Description: ""
-      Path: /
     Metadata:
       aws:cdk:path: WorkshopStack/AthenaAdminRolePolicy/Resource
   AthenaAdminRoleB2929A4F:
@@ -1232,6 +1232,8 @@ Resources:
   SecurityDeployRolePolicy4FCB2A30:
     Type: AWS::IAM::ManagedPolicy
     Properties:
+      Description: ""
+      Path: /
       PolicyDocument:
         Statement:
           - Action:
@@ -1276,8 +1278,6 @@ Resources:
             Resource: "*"
             Sid: GuardDutyAdmin
         Version: "2012-10-17"
-      Description: ""
-      Path: /
     Metadata:
       aws:cdk:path: WorkshopStack/SecurityDeployRolePolicy/Resource
   SecurityDeployRoleEF875284:
@@ -1315,9 +1315,9 @@ Resources:
     Type: AWS::Athena::NamedQuery
     Properties:
       Database: irworkshopgluedatabase
-      QueryString: "/*\nCopyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: MIT-0\n*/\n\n-- PREVIEW TABLE\n-- preview first 10 rows with all fields, quick way to verify everything is setup correctly\n\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nLIMIT 10;\n\n-- PARTITION TESTS \n/*   NOTE: if there are no constraints a partition (account, region, or date) then by default ALL data will be scanned\n           this could lead to costly query, always consider using at least one partition constraint.\n\n           Note that this is the case even if you have other constraints in a query (e.g. sourceipaddress = '192.0.2.1'),\n           only constraints using partition fields (date_partition, region_partition, account_partition)\n           will limit the amount of data scanned.\n*/        \n\n-- preview first 10 rows with all fields, limited to a single account\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition = '111122223333'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple accounts\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition in ('111122223333','444455556666','123456789012')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to a single region\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE region_partition = 'us-east-1'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple regions\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE region_partition in ('us-east-1','us-east-2','us-west-2')\nLIMIT 10;\n\n-- NOTE: date_partition format is 'YYYY/MM/DD' as a string\n-- preview first 10 rows with all fields, limited to a certain date range\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to the past 30 days (relative)\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= date_format(date_add('day',-30,current_timestamp), '%Y/%m/%d')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited by a combination partition constraints\n-- NOTE: narrowing the scope of the query as much as possible will improve performance and minimize cost\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nLIMIT 10;\n\n-- ANALYSIS EXAMPLES\n-- NOTE: default partition constraints have been provided for each query, \n--       be sure to add the appropriate partition constraints to the WHERE clause as shown above\n/*  \n    DEFAULT partition constraints: \n        WHERE date_partition >= '2021/07/01'\n        AND date_partition <= '2021/07/31'\n        AND account_partition = '111122223333'\n        AND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\n\n    Be sure to modify or remove these to fit the scope of your intended analysis\n*/\n\n-- Summary of event counts by Region (e.g. where is the most activity)\nSELECT region_partition, count(*) as eventcount FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region_partition\nORDER BY eventcount DESC\n\n-- Summary of event count by Region and EventName, ordered by event count (decending) for each region\n--   Quick way to identify top EventNames seen in each region\nSELECT region_partition, eventname, count(*) as eventcount FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region_partition, eventname\nORDER BY region_partition, eventcount DESC\n\n-- User login summary, via AssumeRole or ConsoleLogin\n--   includes a list of all source IPs for each user\nSELECT  useridentity.arn, eventname, array_agg(DISTINCT(sourceipaddress) ORDER BY sourceipaddress) AS sourceips FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE useridentity.arn IS NOT NULL\nAND (eventname = 'AssumeRole' OR eventname = 'ConsoleLogin')\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY useridentity.arn, eventname\nORDER BY eventname\n\n-- User Activity Summary\n-- filter high volume read-only GET/LIST/DECRIBE calls\nSELECT useridentity.arn, array_agg(DISTINCT(eventname)) AS eventnames,\n\tarray_agg(DISTINCT(sourceipaddress) ORDER BY sourceipaddress) AS sourceips,\n\tarray_agg(DISTINCT(useragent) ORDER BY useragent) AS useragents FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname <> 'AssumeRole'\nAND eventname NOT LIKE 'Get%'\nAND eventname NOT LIKE 'List%'\nAND eventname NOT LIKE 'Describe%'\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY useridentity.arn\n\n-- User Activity Summary, including username\n-- filter high volume read-only GET/LIST/DECRIBE calls\n-- same as above, but will include the ARN or the username (for IAM Users) of the principal \nSELECT useridentity.arn, useridentity.username,\n\tarray_agg(DISTINCT(eventname) ORDER BY eventname) AS eventnames,\n\tarray_agg(DISTINCT(sourceipaddress) ORDER BY sourceipaddress) AS sourceips,\n\tarray_agg(DISTINCT(useragent) ORDER BY useragent) AS useragents FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname <> 'AssumeRole'\nAND eventname NOT LIKE 'Get%'\nAND eventname NOT LIKE 'List%'\nAND eventname NOT LIKE 'Describe%'\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY useridentity.arn, useridentity.principalid, useridentity.username\n\n-- IAM change summary\n-- * filter read-only GET/LIST/DESCRIBE\n-- * filter unsuccessful calls\nSELECT eventtime, useridentity.arn, useridentity.username, eventname, requestparameters \nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventsource = 'iam.amazonaws.com'\nAND eventname NOT LIKE 'Get%'\nAND eventname NOT LIKE 'List%'\nAND eventname NOT LIKE 'Describe%'\nAND errorcode IS NULL\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nORDER BY account_partition, eventtime\n\n-- Access Key creations with extract of username and keyid\n-- * filter unsuccessful calls\nSELECT eventtime, useridentity.arn, useridentity.username, eventname,\n\tJSON_EXTRACT_SCALAR(JSON_EXTRACT(responseelements, '$.accessKey'), '$.userName') AS userName,\n\tJSON_EXTRACT_SCALAR(JSON_EXTRACT(responseelements, '$.accessKey'), '$.accessKeyId') AS accessKey\n\tFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname = 'CreateAccessKey'\nAND errorcode IS NULL\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nORDER BY account_partition, eventtime\n\n-- Password changes with extract of username\n-- * filter unsuccessful calls\nSELECT eventtime, useridentity.arn, useridentity.username, eventname,\n\tJSON_EXTRACT_SCALAR(requestparameters, '$.userName') AS \"username with password modified\"\n\tFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname IN ('UpdateLoginProfile', 'CreateLoginProfile')\nAND errorcode IS NULL\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nORDER BY account_partition, eventtime\n\n-- Create optimized ORC columnar format table for a single account and region for the past 90 days\n-- NOTE: single query limit is 100 partitions, to add additional accounts, regions, or days use the following INSERT INTO method\n-- Reference: https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into.html\nCREATE TABLE \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"_orc\nWITH (format = 'ORC', orc_compression = 'SNAPPY', partitioned_by = ARRAY['account_partition','region_partition','date_partition'] ) AS\nSELECT eventversion,\n         useridentity,\n         eventtime,\n         eventsource,\n         eventname,\n         awsregion,\n         sourceipaddress,\n         useragent,\n         errorcode,\n         errormessage,\n         requestparameters,\n         responseelements,\n         additionaleventdata,\n         requestid,\n         eventid,\n         resources,\n         eventtype,\n         apiversion,\n         readonly,\n         recipientaccountid,\n         serviceeventdetails,\n         sharedeventid,\n         vpcendpointid,\n         account_partition,\n         region_partition,\n         date_partition\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition = '111122223333' \nAND region_partition = 'us-east-1'\nAND date_partition >= date_format(date_add('day',-90,current_timestamp), '%Y/%m/%d')\n\n-- Add optimized ORC columnar format table for a single account and region for the past 90 days\n-- NOTE: single query limit is 100 partitions, to add additional accounts, regions, or days keep using this INSERT INTO method\n-- Reference: https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into.html\nINSERT INTO \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"_orc\nSELECT eventversion,\n         useridentity,\n         eventtime,\n         eventsource,\n         eventname,\n         awsregion,\n         sourceipaddress,\n         useragent,\n         errorcode,\n         errormessage,\n         requestparameters,\n         responseelements,\n         additionaleventdata,\n         requestid,\n         eventid,\n         resources,\n         eventtype,\n         apiversion,\n         readonly,\n         recipientaccountid,\n         serviceeventdetails,\n         sharedeventid,\n         vpcendpointid,\n         account_partition,\n         region_partition,\n         date_partition\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition = '111122223333' \nAND region_partition = 'us-east-2'\nAND date_partition >= date_format(date_add('day',-90,current_timestamp), '%Y/%m/%d')"
       Description: Example CloudTrail Athena Queries
       Name: CloudTrailExampleQueries
+      QueryString: "/*\nCopyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: MIT-0\n*/\n\n-- PREVIEW TABLE\n-- preview first 10 rows with all fields, quick way to verify everything is setup correctly\n\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nLIMIT 10;\n\n-- PARTITION TESTS \n/*   NOTE: if there are no constraints a partition (account, region, or date) then by default ALL data will be scanned\n           this could lead to costly query, always consider using at least one partition constraint.\n\n           Note that this is the case even if you have other constraints in a query (e.g. sourceipaddress = '192.0.2.1'),\n           only constraints using partition fields (date_partition, region_partition, account_partition)\n           will limit the amount of data scanned.\n*/        \n\n-- preview first 10 rows with all fields, limited to a single account\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition = '111122223333'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple accounts\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition in ('111122223333','444455556666','123456789012')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to a single region\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE region_partition = 'us-east-1'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple regions\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE region_partition in ('us-east-1','us-east-2','us-west-2')\nLIMIT 10;\n\n-- NOTE: date_partition format is 'YYYY/MM/DD' as a string\n-- preview first 10 rows with all fields, limited to a certain date range\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to the past 30 days (relative)\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= date_format(date_add('day',-30,current_timestamp), '%Y/%m/%d')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited by a combination partition constraints\n-- NOTE: narrowing the scope of the query as much as possible will improve performance and minimize cost\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nLIMIT 10;\n\n-- ANALYSIS EXAMPLES\n-- NOTE: default partition constraints have been provided for each query, \n--       be sure to add the appropriate partition constraints to the WHERE clause as shown above\n/*  \n    DEFAULT partition constraints: \n        WHERE date_partition >= '2021/07/01'\n        AND date_partition <= '2021/07/31'\n        AND account_partition = '111122223333'\n        AND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\n\n    Be sure to modify or remove these to fit the scope of your intended analysis\n*/\n\n-- Summary of event counts by Region (e.g. where is the most activity)\nSELECT region_partition, count(*) as eventcount FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region_partition\nORDER BY eventcount DESC\n\n-- Summary of event count by Region and EventName, ordered by event count (decending) for each region\n--   Quick way to identify top EventNames seen in each region\nSELECT region_partition, eventname, count(*) as eventcount FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region_partition, eventname\nORDER BY region_partition, eventcount DESC\n\n-- User login summary, via AssumeRole or ConsoleLogin\n--   includes a list of all source IPs for each user\nSELECT  useridentity.arn, eventname, array_agg(DISTINCT(sourceipaddress) ORDER BY sourceipaddress) AS sourceips FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE useridentity.arn IS NOT NULL\nAND (eventname = 'AssumeRole' OR eventname = 'ConsoleLogin')\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY useridentity.arn, eventname\nORDER BY eventname\n\n-- User Activity Summary\n-- filter high volume read-only GET/LIST/DECRIBE calls\nSELECT useridentity.arn, array_agg(DISTINCT(eventname)) AS eventnames,\n\tarray_agg(DISTINCT(sourceipaddress) ORDER BY sourceipaddress) AS sourceips,\n\tarray_agg(DISTINCT(useragent) ORDER BY useragent) AS useragents FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname <> 'AssumeRole'\nAND eventname NOT LIKE 'Get%'\nAND eventname NOT LIKE 'List%'\nAND eventname NOT LIKE 'Describe%'\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY useridentity.arn\n\n-- User Activity Summary, including username\n-- filter high volume read-only GET/LIST/DECRIBE calls\n-- same as above, but will include the ARN or the username (for IAM Users) of the principal \nSELECT useridentity.arn, useridentity.username,\n\tarray_agg(DISTINCT(eventname) ORDER BY eventname) AS eventnames,\n\tarray_agg(DISTINCT(sourceipaddress) ORDER BY sourceipaddress) AS sourceips,\n\tarray_agg(DISTINCT(useragent) ORDER BY useragent) AS useragents FROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname <> 'AssumeRole'\nAND eventname NOT LIKE 'Get%'\nAND eventname NOT LIKE 'List%'\nAND eventname NOT LIKE 'Describe%'\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY useridentity.arn, useridentity.principalid, useridentity.username\n\n-- IAM change summary\n-- * filter read-only GET/LIST/DESCRIBE\n-- * filter unsuccessful calls\nSELECT eventtime, useridentity.arn, useridentity.username, eventname, requestparameters \nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventsource = 'iam.amazonaws.com'\nAND eventname NOT LIKE 'Get%'\nAND eventname NOT LIKE 'List%'\nAND eventname NOT LIKE 'Describe%'\nAND errorcode IS NULL\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nORDER BY account_partition, eventtime\n\n-- Access Key creations with extract of username and keyid\n-- * filter unsuccessful calls\nSELECT eventtime, useridentity.arn, useridentity.username, eventname,\n\tJSON_EXTRACT_SCALAR(JSON_EXTRACT(responseelements, '$.accessKey'), '$.userName') AS userName,\n\tJSON_EXTRACT_SCALAR(JSON_EXTRACT(responseelements, '$.accessKey'), '$.accessKeyId') AS accessKey\n\tFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname = 'CreateAccessKey'\nAND errorcode IS NULL\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nORDER BY account_partition, eventtime\n\n-- Password changes with extract of username\n-- * filter unsuccessful calls\nSELECT eventtime, useridentity.arn, useridentity.username, eventname,\n\tJSON_EXTRACT_SCALAR(requestparameters, '$.userName') AS \"username with password modified\"\n\tFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE eventname IN ('UpdateLoginProfile', 'CreateLoginProfile')\nAND errorcode IS NULL\nAND date_partition >= '2021/07/01'\nAND date_partition <= '2021/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nORDER BY account_partition, eventtime\n\n-- Create optimized ORC columnar format table for a single account and region for the past 90 days\n-- NOTE: single query limit is 100 partitions, to add additional accounts, regions, or days use the following INSERT INTO method\n-- Reference: https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into.html\nCREATE TABLE \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"_orc\nWITH (format = 'ORC', orc_compression = 'SNAPPY', partitioned_by = ARRAY['account_partition','region_partition','date_partition'] ) AS\nSELECT eventversion,\n         useridentity,\n         eventtime,\n         eventsource,\n         eventname,\n         awsregion,\n         sourceipaddress,\n         useragent,\n         errorcode,\n         errormessage,\n         requestparameters,\n         responseelements,\n         additionaleventdata,\n         requestid,\n         eventid,\n         resources,\n         eventtype,\n         apiversion,\n         readonly,\n         recipientaccountid,\n         serviceeventdetails,\n         sharedeventid,\n         vpcendpointid,\n         account_partition,\n         region_partition,\n         date_partition\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition = '111122223333' \nAND region_partition = 'us-east-1'\nAND date_partition >= date_format(date_add('day',-90,current_timestamp), '%Y/%m/%d')\n\n-- Add optimized ORC columnar format table for a single account and region for the past 90 days\n-- NOTE: single query limit is 100 partitions, to add additional accounts, regions, or days keep using this INSERT INTO method\n-- Reference: https://docs.aws.amazon.com/athena/latest/ug/ctas-insert-into.html\nINSERT INTO \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"_orc\nSELECT eventversion,\n         useridentity,\n         eventtime,\n         eventsource,\n         eventname,\n         awsregion,\n         sourceipaddress,\n         useragent,\n         errorcode,\n         errormessage,\n         requestparameters,\n         responseelements,\n         additionaleventdata,\n         requestid,\n         eventid,\n         resources,\n         eventtype,\n         apiversion,\n         readonly,\n         recipientaccountid,\n         serviceeventdetails,\n         sharedeventid,\n         vpcendpointid,\n         account_partition,\n         region_partition,\n         date_partition\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablecloudtrail\"\nWHERE account_partition = '111122223333' \nAND region_partition = 'us-east-2'\nAND date_partition >= date_format(date_add('day',-90,current_timestamp), '%Y/%m/%d')"
       WorkGroup: IRWorkshopAthenaWorkGroup
     DependsOn:
       - AthenaWorkGroup
@@ -1328,9 +1328,9 @@ Resources:
     Type: AWS::Athena::NamedQuery
     Properties:
       Database: irworkshopgluedatabase
-      QueryString: "/*\nCopyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: MIT-0\n*/\n\n-- PREVIEW TABLE\n-- preview first 10 rows with all fields, quick way to verify everything is setup correctly\n\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nLIMIT 10;\n\n-- PARTITION TESTS \n/*   NOTE: if there are no constraints a partition (account, region, or date) then by default ALL data will be scanned\n           this could lead to costly query, always consider using at least one partition constraint.\n\n           Note that this is the case even if you have other constraints in a query (e.g. sourceaddress = '192.0.2.1'),\n           only constraints using partition fields (date_partition, region_partition, account_partition)\n           will limit the amount of data scanned.\n*/        \n\n-- preview first 10 rows with all fields, limited to a single account\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE account_partition = '111122223333'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple accounts\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE account_partition in ('111122223333','444455556666','123456789012')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to a single vpc\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE vpc_partition = 'vpc-00000001'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple vpcs\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nLIMIT 10;\n\n-- NOTE: date_partition format is 'YYYY/MM/DD' as a string\n-- preview first 10 rows with all fields, limited to a certain date range\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to the past 30 days (relative)\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= date_format(date_add('day',-30,current_timestamp), '%Y/%m/%d')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited by a combination partition constraints\n-- NOTE: narrowing the scope of the query as much as possible will improve performance and minimize cost\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nLIMIT 10;\n\n-- ANALYSIS EXAMPLES\n\n-- Sort queries by requestor instance count and query count\nSELECT  query_name, query_type, array_distinct(filter(array_agg(srcids), q -> q.instance IS NOT NULL)) as instances, \n        cardinality(array_distinct(filter(array_agg(srcids), q -> q.instance IS NOT NULL))) as query_count \nFROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY query_name, query_type\nORDER by query_count DESC;\n\n-- Summary with count of each time a name name queried\nSELECT  query_name, query_type, count(*) as query_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY query_name, query_type\nORDER BY query_count DESC;\n\n-- Summary with count of each time a AAAA record name name queried\nSELECT  query_name, query_type, count(*) as query_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE query_type <> 'AAAA'\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY query_name, query_type\nORDER BY query_count DESC;\n\n-- Summary with count of each time a AAAA record name name queried\n-- split out TLD and SLD (note: doesn't properly handle TLDs containing a '.' (e.g. .com.br)\nSELECT element_at(split(query_name,'.'),-2) AS tld, \n        element_at(split(query_name,'.'),-3) AS sld, \n        query_name, query_type, \n        count(*) AS query_count\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE query_type <> 'AAAA'\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY  query_name, query_type\nORDER BY  query_count DESC;\n\n-- Get records that that resolve to a specific IP\nSELECT * FROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE contains(transform(answers, x-> x.rdata), '203.0.113.2')\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003');\n"
       Description: Example DNS Athena Queries
       Name: DNSExampleQueries
+      QueryString: "/*\nCopyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: MIT-0\n*/\n\n-- PREVIEW TABLE\n-- preview first 10 rows with all fields, quick way to verify everything is setup correctly\n\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nLIMIT 10;\n\n-- PARTITION TESTS \n/*   NOTE: if there are no constraints a partition (account, region, or date) then by default ALL data will be scanned\n           this could lead to costly query, always consider using at least one partition constraint.\n\n           Note that this is the case even if you have other constraints in a query (e.g. sourceaddress = '192.0.2.1'),\n           only constraints using partition fields (date_partition, region_partition, account_partition)\n           will limit the amount of data scanned.\n*/        \n\n-- preview first 10 rows with all fields, limited to a single account\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE account_partition = '111122223333'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple accounts\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE account_partition in ('111122223333','444455556666','123456789012')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to a single vpc\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE vpc_partition = 'vpc-00000001'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple vpcs\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nLIMIT 10;\n\n-- NOTE: date_partition format is 'YYYY/MM/DD' as a string\n-- preview first 10 rows with all fields, limited to a certain date range\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to the past 30 days (relative)\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= date_format(date_add('day',-30,current_timestamp), '%Y/%m/%d')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited by a combination partition constraints\n-- NOTE: narrowing the scope of the query as much as possible will improve performance and minimize cost\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nLIMIT 10;\n\n-- ANALYSIS EXAMPLES\n\n-- Sort queries by requestor instance count and query count\nSELECT  query_name, query_type, array_distinct(filter(array_agg(srcids), q -> q.instance IS NOT NULL)) as instances, \n        cardinality(array_distinct(filter(array_agg(srcids), q -> q.instance IS NOT NULL))) as query_count \nFROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY query_name, query_type\nORDER by query_count DESC;\n\n-- Summary with count of each time a name name queried\nSELECT  query_name, query_type, count(*) as query_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY query_name, query_type\nORDER BY query_count DESC;\n\n-- Summary with count of each time a AAAA record name name queried\nSELECT  query_name, query_type, count(*) as query_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE query_type <> 'AAAA'\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY query_name, query_type\nORDER BY query_count DESC;\n\n-- Summary with count of each time a AAAA record name name queried\n-- split out TLD and SLD (note: doesn't properly handle TLDs containing a '.' (e.g. .com.br)\nSELECT element_at(split(query_name,'.'),-2) AS tld, \n        element_at(split(query_name,'.'),-3) AS sld, \n        query_name, query_type, \n        count(*) AS query_count\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE query_type <> 'AAAA'\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003')\nGROUP BY  query_name, query_type\nORDER BY  query_count DESC;\n\n-- Get records that that resolve to a specific IP\nSELECT * FROM \"irworkshopgluedatabase\".\"irworkshopgluetabledns\"\nWHERE contains(transform(answers, x-> x.rdata), '203.0.113.2')\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND vpc_partition in ('vpc-00000001','vpc-00000002','vpc-00000003');\n"
       WorkGroup: IRWorkshopAthenaWorkGroup
     DependsOn:
       - AthenaWorkGroup
@@ -1341,9 +1341,9 @@ Resources:
     Type: AWS::Athena::NamedQuery
     Properties:
       Database: irworkshopgluedatabase
-      QueryString: "/*\nCopyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: MIT-0\n*/\n\n-- PREVIEW TABLE\n-- preview first 10 rows with all fields, quick way to verify everything is setup correctly\n\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nLIMIT 10;\n\n-- PARTITION TESTS \n/*   NOTE: if there are no constraints a partition (account, region, or date) then by default ALL data will be scanned\n           this could lead to costly query, always consider using at least one partition constraint.\n\n           Note that this is the case even if you have other constraints in a query (e.g. sourceaddress = '192.0.2.1'),\n           only constraints using partition fields (date_partition, region_partition, account_partition)\n           will limit the amount of data scanned.\n*/        \n\n-- preview first 10 rows with all fields, limited to a single account\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE account_partition = '111122223333'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple accounts\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE account_partition in ('111122223333','444455556666','123456789012')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to a single region\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE region_partition = 'us-east-1'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple regions\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE region_partition in ('us-east-1','us-east-2','us-west-2')\nLIMIT 10;\n\n-- NOTE: date_partition format is 'YYYY/MM/DD' as a string\n-- preview first 10 rows with all fields, limited to a certain date range\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to the past 30 days (relative)\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= date_format(date_add('day',-30,current_timestamp), '%Y/%m/%d')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited by a combination partition constraints\n-- NOTE: narrowing the scope of the query as much as possible will improve performance and minimize cost\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nLIMIT 10;\n\n-- ANALYSIS EXAMPLES\n-- NOTE: default partition constraints have been provided for each query, \n--       be sure to add the appropriate partition constraints to the WHERE clause as shown above\n/*  \n    DEFAULT partition constraints: \n        WHERE date_partition >= '2020/07/01'\n        AND date_partition <= '2020/07/31'\n        AND account_partition = '111122223333'\n        AND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\n\n    Be sure to modify or remove these to fit the scope of your intended analysis\n*/\n\n-- Get list source/destination IP pairs ordered by the number of records \nSELECT region, instanceid, sourceaddress, destinationaddress, count(*) as record_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress\nORDER BY record_count DESC\n\n-- Get a summary of records between a given source/destination IP pair, ordered by the total number of bytes\nSELECT region, instanceid, sourceaddress, destinationaddress, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE (sourceaddress = '192.0.2.1' OR destinationaddress = '192.0.2.1')\nAND (sourceaddress = '203.0.113.2' OR destinationaddress = '203.0.113.2')\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress\nORDER BY byte_count DESC\n\n-- Get a summary of the number of bytes sent from port 443 limited to a single instance\n-- NOTE: for remote IPs this represents the amount data downloaded from port 443 by the instance,\n--       for instance IPs this represents the amount data downloaded by remost hosts from the instance on port 443\nSELECT region, instanceid, sourceaddress, sourceport, destinationaddress, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE instanceid = 'i-000000000000000'\nAND sourceport = 443\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, sourceport, destinationaddress\nORDER BY byte_count DESC\n\n-- Get a summary of the number of bytes sent to port 443 limited to a single instance\n-- NOTE: for remote IPs this represents the amount data uploaded to port 443 by the instance,\n--       for instance IPs this represents the amount data uploaded by remost hosts to the instance on port 443\nSELECT region, instanceid, sourceaddress, destinationaddress, destinationport, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE instanceid = 'i-000000000000000'\nAND destinationport = 443\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress, destinationport\nORDER BY byte_count DESC\n\n-- Get a summary with the number of bytes for each src_ip,src_port,dst_ip,dst_port quad across all records to or from a specific IP\nSELECT sourceaddress, destinationaddress, sourceport, destinationport, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE (sourceaddress = '192.0.2.1' OR destinationaddress = '192.0.2.1')\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY sourceaddress, destinationaddress, sourceport, destinationport\nORDER BY byte_count DESC\n\n-- Get all flow records between two IPs showing flow_direction (requires v5 flow-direction field to be enabled)\nSELECT from_unixtime(starttime) AS start_time,\nfrom_unixtime(endtime) AS end_time,\ninterfaceid,\nsourceaddress,\ndestinationaddress,\nsourceport,\ndestinationport,\nnumpackets,\nnumbytes,\nflow_direction,\naction\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE (sourceaddress = '192.0.2.1'\nAND destinationaddress = '192.0.2.254')\nOR (sourceaddress = '192.0.2.254'\nAND destinationaddress = '192.0.2.1')\nORDER BY starttime ASC\n\n-- List when source ips were first seen / last seen with a summary of destination ip/instances/ports\nSELECT sourceaddress,\n         min(starttime) AS first_seen,\n         max(endtime) AS last_seen,\n         array_agg(DISTINCT(destinationaddress)),\n         array_agg(DISTINCT(instanceid)),\n         array_agg(DISTINCT(destinationport))\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE destinationport < 32768 -- skip ephemeral ports, since we're looking for inbound connections to service ports\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY sourceaddress\nORDER by first_seen ASC\n\n\n-- Daily Transfer Report on Top 10 Internal IPs with large transfers, limited to source addresses in network 192.0.2.0/24\nSELECT \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".event_date, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".destinationaddress, sum(\"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".numbytes) as byte_count\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\" \nINNER JOIN (SELECT sourceaddress, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE sourceaddress like '192.0.2.%'\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress, destinationport\nORDER BY byte_count DESC\nLIMIT 10) as top_n \nON top_n.sourceaddress = \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".event_date, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".destinationaddress\nORDER BY \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".event_date ASC, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress ASC, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".destinationaddress ASC, byte_count DESC"
       Description: Example VPC Flow Athena Queries
       Name: VPCFlowExampleQueries
+      QueryString: "/*\nCopyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\nSPDX-License-Identifier: MIT-0\n*/\n\n-- PREVIEW TABLE\n-- preview first 10 rows with all fields, quick way to verify everything is setup correctly\n\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nLIMIT 10;\n\n-- PARTITION TESTS \n/*   NOTE: if there are no constraints a partition (account, region, or date) then by default ALL data will be scanned\n           this could lead to costly query, always consider using at least one partition constraint.\n\n           Note that this is the case even if you have other constraints in a query (e.g. sourceaddress = '192.0.2.1'),\n           only constraints using partition fields (date_partition, region_partition, account_partition)\n           will limit the amount of data scanned.\n*/        \n\n-- preview first 10 rows with all fields, limited to a single account\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE account_partition = '111122223333'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple accounts\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE account_partition in ('111122223333','444455556666','123456789012')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to a single region\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE region_partition = 'us-east-1'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to multiple regions\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE region_partition in ('us-east-1','us-east-2','us-west-2')\nLIMIT 10;\n\n-- NOTE: date_partition format is 'YYYY/MM/DD' as a string\n-- preview first 10 rows with all fields, limited to a certain date range\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited to the past 30 days (relative)\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= date_format(date_add('day',-30,current_timestamp), '%Y/%m/%d')\nLIMIT 10;\n\n-- preview first 10 rows with all fields, limited by a combination partition constraints\n-- NOTE: narrowing the scope of the query as much as possible will improve performance and minimize cost\nSELECT * from \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nLIMIT 10;\n\n-- ANALYSIS EXAMPLES\n-- NOTE: default partition constraints have been provided for each query, \n--       be sure to add the appropriate partition constraints to the WHERE clause as shown above\n/*  \n    DEFAULT partition constraints: \n        WHERE date_partition >= '2020/07/01'\n        AND date_partition <= '2020/07/31'\n        AND account_partition = '111122223333'\n        AND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\n\n    Be sure to modify or remove these to fit the scope of your intended analysis\n*/\n\n-- Get list source/destination IP pairs ordered by the number of records \nSELECT region, instanceid, sourceaddress, destinationaddress, count(*) as record_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress\nORDER BY record_count DESC\n\n-- Get a summary of records between a given source/destination IP pair, ordered by the total number of bytes\nSELECT region, instanceid, sourceaddress, destinationaddress, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE (sourceaddress = '192.0.2.1' OR destinationaddress = '192.0.2.1')\nAND (sourceaddress = '203.0.113.2' OR destinationaddress = '203.0.113.2')\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress\nORDER BY byte_count DESC\n\n-- Get a summary of the number of bytes sent from port 443 limited to a single instance\n-- NOTE: for remote IPs this represents the amount data downloaded from port 443 by the instance,\n--       for instance IPs this represents the amount data downloaded by remost hosts from the instance on port 443\nSELECT region, instanceid, sourceaddress, sourceport, destinationaddress, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE instanceid = 'i-000000000000000'\nAND sourceport = 443\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, sourceport, destinationaddress\nORDER BY byte_count DESC\n\n-- Get a summary of the number of bytes sent to port 443 limited to a single instance\n-- NOTE: for remote IPs this represents the amount data uploaded to port 443 by the instance,\n--       for instance IPs this represents the amount data uploaded by remost hosts to the instance on port 443\nSELECT region, instanceid, sourceaddress, destinationaddress, destinationport, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE instanceid = 'i-000000000000000'\nAND destinationport = 443\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress, destinationport\nORDER BY byte_count DESC\n\n-- Get a summary with the number of bytes for each src_ip,src_port,dst_ip,dst_port quad across all records to or from a specific IP\nSELECT sourceaddress, destinationaddress, sourceport, destinationport, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE (sourceaddress = '192.0.2.1' OR destinationaddress = '192.0.2.1')\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY sourceaddress, destinationaddress, sourceport, destinationport\nORDER BY byte_count DESC\n\n-- Get all flow records between two IPs showing flow_direction (requires v5 flow-direction field to be enabled)\nSELECT from_unixtime(starttime) AS start_time,\nfrom_unixtime(endtime) AS end_time,\ninterfaceid,\nsourceaddress,\ndestinationaddress,\nsourceport,\ndestinationport,\nnumpackets,\nnumbytes,\nflow_direction,\naction\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE (sourceaddress = '192.0.2.1'\nAND destinationaddress = '192.0.2.254')\nOR (sourceaddress = '192.0.2.254'\nAND destinationaddress = '192.0.2.1')\nORDER BY starttime ASC\n\n-- List when source ips were first seen / last seen with a summary of destination ip/instances/ports\nSELECT sourceaddress,\n         min(starttime) AS first_seen,\n         max(endtime) AS last_seen,\n         array_agg(DISTINCT(destinationaddress)),\n         array_agg(DISTINCT(instanceid)),\n         array_agg(DISTINCT(destinationport))\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE destinationport < 32768 -- skip ephemeral ports, since we're looking for inbound connections to service ports\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY sourceaddress\nORDER by first_seen ASC\n\n\n-- Daily Transfer Report on Top 10 Internal IPs with large transfers, limited to source addresses in network 192.0.2.0/24\nSELECT \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".event_date, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".destinationaddress, sum(\"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".numbytes) as byte_count\nFROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\" \nINNER JOIN (SELECT sourceaddress, sum(numbytes) as byte_count FROM \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\"\nWHERE sourceaddress like '192.0.2.%'\nAND date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY region, instanceid, sourceaddress, destinationaddress, destinationport\nORDER BY byte_count DESC\nLIMIT 10) as top_n \nON top_n.sourceaddress = \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress\nWHERE date_partition >= '2020/07/01'\nAND date_partition <= '2020/07/31'\nAND account_partition = '111122223333'\nAND region_partition in ('us-east-1','us-east-2','us-west-2', 'us-west-2')\nGROUP BY \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".event_date, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".destinationaddress\nORDER BY \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".event_date ASC, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".sourceaddress ASC, \"irworkshopgluedatabase\".\"irworkshopgluetablevpcflow\".destinationaddress ASC, byte_count DESC"
       WorkGroup: IRWorkshopAthenaWorkGroup
     DependsOn:
       - AthenaWorkGroup
@@ -1353,6 +1353,8 @@ Resources:
   SystemIntegrationPolicy6FA12ED7:
     Type: AWS::IAM::ManagedPolicy
     Properties:
+      Description: ""
+      Path: /
       PolicyDocument:
         Statement:
           - Action: iam:*
@@ -1360,8 +1362,6 @@ Resources:
             Resource: "*"
             Sid: AllowIAM
         Version: "2012-10-17"
-      Description: ""
-      Path: /
     Metadata:
       aws:cdk:path: WorkshopStack/SystemIntegrationPolicy/Resource
   CredentialExposure2C2BE0C1:
@@ -1375,14 +1375,16 @@ Resources:
   CredentialExposureAccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
+      Status: Active
       UserName:
         Ref: CredentialExposure2C2BE0C1
-      Status: Active
     Metadata:
       aws:cdk:path: WorkshopStack/CredentialExposureAccessKey
   CryptoMiningPolicyD641E830:
     Type: AWS::IAM::ManagedPolicy
     Properties:
+      Description: ""
+      Path: /
       PolicyDocument:
         Statement:
           - Action: ec2:*
@@ -1390,8 +1392,6 @@ Resources:
             Resource: "*"
             Sid: AllowEC2
         Version: "2012-10-17"
-      Description: ""
-      Path: /
     Metadata:
       aws:cdk:path: WorkshopStack/CryptoMiningPolicy/Resource
   CryptoMiningCredentialF9F78A67:
@@ -1405,9 +1405,9 @@ Resources:
   CryptoMiningAccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
+      Status: Active
       UserName:
         Ref: CryptoMiningCredentialF9F78A67
-      Status: Active
     Metadata:
       aws:cdk:path: WorkshopStack/CryptoMiningAccessKey
 Parameters:
@@ -1428,7 +1428,7 @@ Parameters:
     Description: Athena DNS Table Projection Partition Start Date
   ParamBasePrincipal:
     Type: String
-    Default: role/TeamRole
+    Default: role/WSParticipantRole
     Description: "IAM Principal to assume Security roles (usage: IAM User - prefix with user/, IAM Role - prefix with role/)"
 Outputs:
   AthenaWorkgroupQueryOutputLocation:
