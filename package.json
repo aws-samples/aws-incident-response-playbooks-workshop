@@ -6,6 +6,6 @@
   "author": "AWS Professional Services",
   "license": "MIT-0",
   "dependencies": {
-    "aws-cdk": "2.91"
+    "aws-cdk": "2.128"
   }
 }

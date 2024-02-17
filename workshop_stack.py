@@ -156,6 +156,15 @@ class WorkshopStack(Stack):
         athena_workgroup_output_location = "".join(["s3://",
                                                     athena_bucket.bucket_name,
                                                     "/"])
+
+        CfnParamAthenaEngineVersion = CfnParameter(
+            self,
+            "ParamAthenaEngineVersion",
+            type="String",
+            default="Athena engine version 3",
+            description="Athena Engine Version",
+        )
+
         athena_workgroup = aws_athena.CfnWorkGroup(
             self,
             "AthenaWorkGroup",
@@ -173,7 +182,7 @@ class WorkshopStack(Stack):
                 requester_pays_enabled=False,
                 publish_cloud_watch_metrics_enabled=False,
                 engine_version=aws_athena.CfnWorkGroup.EngineVersionProperty(
-                    selected_engine_version="Athena engine version 2",
+                    selected_engine_version=CfnParamAthenaEngineVersion.value_as_string,
                 )
             )
         )

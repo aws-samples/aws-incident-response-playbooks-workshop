@@ -1,3 +1,15 @@
+# Version [1.3] - 2024-02-17
+
+## Changes
+
+### Workshop stack
+* Upgraded to AWS CDK version 2.128
+* Created CfnParameter for Athena Engine Version
+* Set Athena Engine Version as 3
+
+### Playbooks
+* Not applicable
+
 # Version [1.2] - 2023-08-14
 
 ## Changes
