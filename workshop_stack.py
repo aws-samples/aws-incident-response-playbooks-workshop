@@ -29,31 +29,8 @@ class WorkshopStack(Stack):
         logging_bucket = aws_s3.Bucket(
             self,
             "BucketLogs",
-        )
-        logging_bucket.add_to_resource_policy(
-            aws_iam.PolicyStatement(
-                sid="AllowAWSServiceGetBucketAcl",
-                effect=aws_iam.Effect.ALLOW,
-                principals=[aws_iam.ServicePrincipal(service="cloudtrail.amazonaws.com"),
-                            aws_iam.ServicePrincipal(service="delivery.logs.amazonaws.com")],
-                actions=["s3:GetBucketAcl"],
-                resources=[logging_bucket.bucket_arn],
-            )
-        )
-        logging_bucket.add_to_resource_policy(
-            aws_iam.PolicyStatement(
-                sid="AllowAWSServicePutObject",
-                effect=aws_iam.Effect.ALLOW,
-                principals=[aws_iam.ServicePrincipal(service="cloudtrail.amazonaws.com"),
-                            aws_iam.ServicePrincipal(service="delivery.logs.amazonaws.com")],
-                actions=["s3:PutObject"],
-                resources=[logging_bucket.bucket_arn + "/*"],
-                conditions={
-                    "StringEquals": {
-                        "s3:x-amz-acl": "bucket-owner-full-control"
-                    }
-                },
-            )
+            block_public_access=aws_s3.BlockPublicAccess.BLOCK_ALL,
+            encryption=aws_s3.BucketEncryption.S3_MANAGED,
         )
         athena_bucket = aws_s3.Bucket(
             self,
@@ -66,6 +43,29 @@ class WorkshopStack(Stack):
             enable_file_validation=True,
             bucket=logging_bucket,
             trail_name="IRWorkshopTrail",
+        )
+        logging_bucket.add_to_resource_policy(
+            aws_iam.PolicyStatement(
+                sid="AllowAWSServiceGetBucketAcl",
+                effect=aws_iam.Effect.ALLOW,
+                principals=[aws_iam.ServicePrincipal(service="delivery.logs.amazonaws.com")],
+                actions=["s3:GetBucketAcl"],
+                resources=[logging_bucket.bucket_arn],
+            )
+        )
+        logging_bucket.add_to_resource_policy(
+            aws_iam.PolicyStatement(
+                sid="AllowAWSServicePutObject",
+                effect=aws_iam.Effect.ALLOW,
+                principals=[aws_iam.ServicePrincipal(service="delivery.logs.amazonaws.com")],
+                actions=["s3:PutObject"],
+                resources=[logging_bucket.bucket_arn + "/*"],
+                conditions={
+                    "StringEquals": {
+                        "s3:x-amz-acl": "bucket-owner-full-control"
+                    }
+                },
+            )
         )
         cloutrail_trail.log_all_s3_data_events()
         vpc_subnets = [aws_ec2.SubnetConfiguration(

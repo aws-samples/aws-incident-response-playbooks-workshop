@@ -1,6 +1,16 @@
 Resources:
   BucketLogs9C0DCA97:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
     Metadata:
@@ -12,34 +22,6 @@ Resources:
         Ref: BucketLogs9C0DCA97
       PolicyDocument:
         Statement:
-          - Action: s3:GetBucketAcl
-            Effect: Allow
-            Principal:
-              Service:
-                - cloudtrail.amazonaws.com
-                - delivery.logs.amazonaws.com
-            Resource:
-              Fn::GetAtt:
-                - BucketLogs9C0DCA97
-                - Arn
-            Sid: AllowAWSServiceGetBucketAcl
-          - Action: s3:PutObject
-            Condition:
-              StringEquals:
-                s3:x-amz-acl: bucket-owner-full-control
-            Effect: Allow
-            Principal:
-              Service:
-                - cloudtrail.amazonaws.com
-                - delivery.logs.amazonaws.com
-            Resource:
-              Fn::Join:
-                - ""
-                - - Fn::GetAtt:
-                      - BucketLogs9C0DCA97
-                      - Arn
-                  - /*
-            Sid: AllowAWSServicePutObject
           - Action: s3:GetBucketAcl
             Effect: Allow
             Principal:
@@ -64,6 +46,30 @@ Resources:
                   - /AWSLogs/
                   - Ref: AWS::AccountId
                   - /*
+          - Action: s3:GetBucketAcl
+            Effect: Allow
+            Principal:
+              Service: delivery.logs.amazonaws.com
+            Resource:
+              Fn::GetAtt:
+                - BucketLogs9C0DCA97
+                - Arn
+            Sid: AllowAWSServiceGetBucketAcl
+          - Action: s3:PutObject
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: bucket-owner-full-control
+            Effect: Allow
+            Principal:
+              Service: delivery.logs.amazonaws.com
+            Resource:
+              Fn::Join:
+                - ""
+                - - Fn::GetAtt:
+                      - BucketLogs9C0DCA97
+                      - Arn
+                  - /*
+            Sid: AllowAWSServicePutObject
         Version: "2012-10-17"
     Metadata:
       aws:cdk:path: WorkshopStack/BucketLogs/Policy/Resource
@@ -776,14 +782,14 @@ Resources:
                   - :workgroup/IRWorkshopAthenaWorkGroup
             Sid: SecurityNamedQueryFullAccess
           - Action:
-              - athena:GetWorkGroup
-              - athena:ListWorkGroups
               - athena:BatchGetQueryExecution
               - athena:GetQueryExecution
               - athena:GetQueryResults
               - athena:GetQueryResultsStream
+              - athena:GetWorkGroup
               - athena:ListQueryExecutions
               - athena:ListTagsForResource
+              - athena:ListWorkGroups
               - athena:StartQueryExecution
               - athena:StopQueryExecution
             Effect: Allow
@@ -801,12 +807,12 @@ Resources:
             Resource: "*"
             Sid: SecurityWorkgroupListAll
           - Action:
-              - athena:GetDataCatalog
-              - athena:ListDataCatalogs
               - athena:GetCatalogImportStatus
+              - athena:GetDataCatalog
               - athena:GetDatabase
-              - athena:ListDatabases
               - athena:GetTableMetadata
+              - athena:ListDataCatalogs
+              - athena:ListDatabases
               - athena:ListTableMetadata
             Effect: Allow
             Resource:
@@ -829,14 +835,14 @@ Resources:
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :database/irworkshopgluedatabase
+                    - :catalog
               - Fn::Join:
                   - ""
                   - - "arn:aws:glue:"
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :catalog
+                    - :database/irworkshopgluedatabase
             Sid: SecurityGlueDatabaseReadOnly
           - Action:
               - glue:GetTable
@@ -849,7 +855,7 @@ Resources:
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :table/irworkshopgluedatabase/*
+                    - :catalog
               - Fn::Join:
                   - ""
                   - - "arn:aws:glue:"
@@ -863,7 +869,7 @@ Resources:
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :catalog
+                    - :table/irworkshopgluedatabase/*
             Sid: SecurityGlueTableReadOnly
           - Action:
               - glue:BatchGetPartition
@@ -920,10 +926,10 @@ Resources:
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - BucketLogs9C0DCA97
+                  - BucketAthena8BD64EF0
                   - Arn
               - Fn::GetAtt:
-                  - BucketAthena8BD64EF0
+                  - BucketLogs9C0DCA97
                   - Arn
             Sid: ListLogAndOutputBuckets
           - Action: cloudshell:*
@@ -994,19 +1000,19 @@ Resources:
                   - :workgroup/*
             Sid: SecurityNamedQueryFullAccess
           - Action:
+              - athena:BatchGetQueryExecution
               - athena:CreateWorkGroup
               - athena:DeleteWorkGroup
-              - athena:GetWorkGroup
-              - athena:ListWorkGroups
-              - athena:UpdateWorkGroup
-              - athena:BatchGetQueryExecution
               - athena:GetQueryExecution
               - athena:GetQueryResults
               - athena:GetQueryResultsStream
+              - athena:GetWorkGroup
               - athena:ListQueryExecutions
               - athena:ListTagsForResource
+              - athena:ListWorkGroups
               - athena:StartQueryExecution
               - athena:StopQueryExecution
+              - athena:UpdateWorkGroup
             Effect: Allow
             Resource:
               Fn::Join:
@@ -1021,12 +1027,12 @@ Resources:
               - athena:CreateDataCatalog
               - athena:DeleteDataCatalog
               - athena:GetDataCatalog
-              - athena:ListDataCatalogs
-              - athena:UpdateDataCatalog
               - athena:GetDatabase
-              - athena:ListDatabases
               - athena:GetTableMetadata
+              - athena:ListDataCatalogs
+              - athena:ListDatabases
               - athena:ListTableMetadata
+              - athena:UpdateDataCatalog
             Effect: Allow
             Resource:
               Fn::Join:
@@ -1051,21 +1057,21 @@ Resources:
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :database/*
+                    - :catalog
               - Fn::Join:
                   - ""
                   - - "arn:aws:glue:"
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :catalog
+                    - :database/*
             Sid: SecurityGlueDatabaseFullAccess
           - Action:
               - glue:BatchDeleteTable
               - glue:CreateTable
               - glue:DeleteTable
-              - glue:GetTables
               - glue:GetTable
+              - glue:GetTables
               - glue:UpdateTable
             Effect: Allow
             Resource:
@@ -1075,7 +1081,7 @@ Resources:
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :table/*
+                    - :catalog
               - Fn::Join:
                   - ""
                   - - "arn:aws:glue:"
@@ -1089,7 +1095,7 @@ Resources:
                     - Ref: AWS::Region
                     - ":"
                     - Ref: AWS::AccountId
-                    - :catalog
+                    - :table/*
             Sid: SecurityGlueTableFullAccess
           - Action:
               - glue:BatchCreatePartition
@@ -1146,15 +1152,15 @@ Resources:
             Sid: LogSourceBucketReadOnly
           - Action:
               - s3:GetBucketLocation
-              - s3:ListBucket
               - s3:ListAllMyBuckets
+              - s3:ListBucket
             Effect: Allow
             Resource:
               - Fn::GetAtt:
-                  - BucketLogs9C0DCA97
+                  - BucketAthena8BD64EF0
                   - Arn
               - Fn::GetAtt:
-                  - BucketAthena8BD64EF0
+                  - BucketLogs9C0DCA97
                   - Arn
             Sid: ListLogAndOutputBuckets
           - Action: cloudshell:*
@@ -1239,14 +1245,14 @@ Resources:
         Statement:
           - Action:
               - cloudformation:CreateStack
-              - cloudformation:DescribeStacks
+              - cloudformation:CreateUploadBucket
               - cloudformation:DescribeStackEvents
               - cloudformation:DescribeStackResources
+              - cloudformation:DescribeStacks
               - cloudformation:GetTemplate
               - cloudformation:GetTemplateSummary
               - cloudformation:ListStacks
               - cloudformation:ValidateTemplate
-              - cloudformation:CreateUploadBucket
             Effect: Allow
             Resource: "*"
             Sid: StackPermissions
@@ -1255,22 +1261,22 @@ Resources:
             Resource: "*"
             Sid: CloudShellPermissions
           - Action:
-              - s3:PutObject
-              - s3:ListBucket
-              - s3:GetObject
               - s3:CreateBucket
+              - s3:GetObject
+              - s3:ListBucket
+              - s3:PutObject
             Effect: Allow
             Resource: "*"
             Sid: S3Permissions
           - Action:
-              - iam:CreateUser
-              - iam:CreatePolicy
               - iam:CreateAccessKey
-              - iam:GetUser
-              - iam:GetPolicy
+              - iam:CreatePolicy
               - iam:CreateServiceLinkedRole
-              - iam:PutRolePolicy
+              - iam:CreateUser
               - iam:DeleteRolePolicy
+              - iam:GetPolicy
+              - iam:GetUser
+              - iam:PutRolePolicy
             Effect: Allow
             Resource: "*"
             Sid: IAMPermissions
